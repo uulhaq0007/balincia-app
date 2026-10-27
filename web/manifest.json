@@ -1,11 +1,11 @@
 {
-    "name": "balincia_app",
-    "short_name": "balincia_app",
+    "name": "Balincia",
+    "short_name": "Balincia",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#f6f1e9",
+    "theme_color": "#16120f",
+    "description": "Balincia — long-lasting perfumes and attars, composed in Karachi.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
