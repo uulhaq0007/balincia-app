@@ -230,7 +230,7 @@ class QuantityStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final h = compact ? 36.0 : 46.0;
+    final h = compact ? 32.0 : 46.0;
     Widget button(IconData icon, VoidCallback? onTap, String label) => SizedBox(
       width: h,
       height: h,
@@ -535,7 +535,7 @@ class AmountRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
           Expanded(

@@ -26,7 +26,7 @@ class BagScreen extends StatelessWidget {
             centerTitle: false,
             automaticallyImplyLeading: false,
             titleSpacing: 20,
-            toolbarHeight: 64,
+            toolbarHeight: 58,
             title: Text.rich(
               TextSpan(
                 children: [
@@ -74,9 +74,9 @@ class BagScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     PaperCard(
-                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 18),
+                      padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -149,18 +149,18 @@ class _BagItem extends StatelessWidget {
       ),
       child: Container(
         color: BrandColors.card,
-        padding: const EdgeInsets.all(9),
+        padding: const EdgeInsets.all(8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
               onTap: () => context.push('/product/${p.slug}'),
-              child: BottleThumb(product: p, width: 62, height: 77, radius: 13),
+              child: BottleThumb(product: p, width: 56, height: 70, radius: 13),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: SizedBox(
-                height: 77,
+                height: 70,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -180,7 +180,7 @@ class _BagItem extends StatelessWidget {
                               const SizedBox(height: 1),
                               Text(
                                 '${item.variant.label} · ${formatPrice(item.variant.price)}',
-                                style: AppText.sans(12.5, color: BrandColors.muted),
+                                style: AppText.sans(12.5, color: BrandColors.muted, height: 1.3),
                               ),
                             ],
                           ),
@@ -414,7 +414,7 @@ class _PointsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '1 point = Rs. 1 · up to ${StoreConfig.maxPointsRedeemPercent}% of your order',
+                  '1 pt = Rs. 1 · max ${StoreConfig.maxPointsRedeemPercent}% of order',
                   style: AppText.sans(11.5, color: BrandColors.paper.withValues(alpha: 0.55)),
                 ),
               ],
