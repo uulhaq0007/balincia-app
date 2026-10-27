@@ -1,8 +1,6 @@
 // Port of the web store's src/lib/catalog.ts + src/lib/constants.ts:
 // filter parsing, the where-clause (as a predicate), sorting and collections.
 
-import 'package:flutter/painting.dart';
-
 import '../models/product.dart';
 import 'products.dart';
 import 'reviews.dart';
@@ -90,17 +88,6 @@ const kConcentrationLabels = {
   'SET': 'Gift / Sample Set',
 };
 
-const kConcentrationShort = {
-  'EDP': 'Eau de Parfum',
-  'EDT': 'Eau de Toilette',
-  'EXTRAIT': 'Extrait',
-  'PARFUM': 'Parfum',
-  'ATTAR': 'Attar',
-  'MIST': 'Body Mist',
-  'HOME': 'Home',
-  'SET': 'Set',
-};
-
 String labelFor(List<Option> options, String value) =>
     options.firstWhere((o) => o.value == value, orElse: () => Option(value, value)).label;
 
@@ -156,8 +143,7 @@ class CatalogFilters {
 
   /// Parses `/shop?gender=MEN&family=woody,oud&min=2000&longevity=4…` like `parseFilters`.
   factory CatalogFilters.fromQuery(Map<String, String> qp) {
-    Set<String> list(String key) =>
-        (qp[key] ?? '').split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toSet();
+    Set<String> list(String key) => (qp[key] ?? '').split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toSet();
     int? num(String key) => int.tryParse(qp[key] ?? '');
     final q = qp['q']?.trim();
     return CatalogFilters(
@@ -180,8 +166,15 @@ class CatalogFilters {
     final query = q?.toLowerCase();
     if (query != null && query.isNotEmpty) {
       final category = categoryBySlug(p.category)?.name.toLowerCase() ?? '';
-      final hit = [p.name, p.tagline, p.topNotes, p.heartNotes, p.baseNotes, p.familiesRaw, category]
-          .any((field) => field.toLowerCase().contains(query));
+      final hit = [
+        p.name,
+        p.tagline,
+        p.topNotes,
+        p.heartNotes,
+        p.baseNotes,
+        p.familiesRaw,
+        category,
+      ].any((field) => field.toLowerCase().contains(query));
       if (!hit) return false;
     }
     if (gender.isNotEmpty && !gender.contains(p.gender)) return false;
@@ -457,20 +450,24 @@ Product? productBySlug(String slug) {
 
 Product productNamed(String slug) => productBySlug(slug)!;
 
-/// "Signature Collection · Eau de Parfum"
-String productEyebrow(Product p) =>
-    '${categoryBySlug(p.category)?.name ?? ''} · ${kConcentrationShort[p.concentration] ?? p.concentration}';
+/// Compact card label, e.g. "Signature · EDP" or just "Gift Sets".
+String productEyebrow(Product p) {
+  final category = (categoryBySlug(p.category)?.name ?? '').replaceAll(' Collection', '');
+  const short = {'EDP': 'EDP', 'EDT': 'EDT', 'EXTRAIT': 'Extrait', 'PARFUM': 'Parfum', 'ATTAR': 'Perfume oil'};
+  final concentration = short[p.concentration];
+  return concentration == null ? category : '$category · $concentration';
+}
 
 /// Products that share a family with [p], for "You may also like".
 List<Product> relatedTo(Product p, {int take = 6}) {
-  final scored = kProducts.where((o) => o.slug != p.slug).map((o) {
-    final shared = o.families.where(p.families.contains).length;
-    final sameCategory = o.category == p.category ? 1 : 0;
-    return (o, shared * 2 + sameCategory);
-  }).toList()
-    ..sort((a, b) {
-      final s = b.$2.compareTo(a.$2);
-      return s != 0 ? s : b.$1.soldCount.compareTo(a.$1.soldCount);
-    });
+  final scored =
+      kProducts.where((o) => o.slug != p.slug).map((o) {
+        final shared = o.families.where(p.families.contains).length;
+        final sameCategory = o.category == p.category ? 1 : 0;
+        return (o, shared * 2 + sameCategory);
+      }).toList()..sort((a, b) {
+        final s = b.$2.compareTo(a.$2);
+        return s != 0 ? s : b.$1.soldCount.compareTo(a.$1.soldCount);
+      });
   return scored.take(take).map((e) => e.$1).toList();
 }

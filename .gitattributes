@@ -1,0 +1,8 @@
+# Keep LF line endings in the repo and working copy (Dart/Flutter default).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ttf binary
+*.otf binary

@@ -15,7 +15,10 @@ class Eyebrow extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) => Text(text.toUpperCase(), style: AppText.eyebrow(color: color, size: size));
+  Widget build(BuildContext context) => Text(
+    text.toUpperCase(),
+    style: AppText.eyebrow(color: color, size: size),
+  );
 }
 
 /// Fraunces headline where `*words*` are set in gold italics, like the web's
@@ -88,11 +91,7 @@ class SectionHeading extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Eyebrow(eyebrow),
-                const SizedBox(height: 8),
-                EditorialText(title, size: 27),
-              ],
+              children: [Eyebrow(eyebrow), const SizedBox(height: 8), EditorialText(title, size: 27)],
             ),
           ),
           if (actionLabel != null)
@@ -152,10 +151,11 @@ class PriceTag extends StatelessWidget {
           if (sale)
             TextSpan(
               text: '  ${formatPrice(compareAtPrice!)}',
-              style: AppText.sans(size * 0.78, weight: FontWeight.w500, color: BrandColors.muted).copyWith(
-                decoration: TextDecoration.lineThrough,
-                decorationColor: BrandColors.muted,
-              ),
+              style: AppText.sans(
+                size * 0.78,
+                weight: FontWeight.w500,
+                color: BrandColors.muted,
+              ).copyWith(decoration: TextDecoration.lineThrough, decorationColor: BrandColors.muted),
             ),
         ],
       ),
@@ -204,13 +204,23 @@ class Pill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(99)),
-      child: Text(text.toUpperCase(), style: AppText.sans(8.5, weight: FontWeight.w800, color: foreground, letterSpacing: 1.1, height: 1.1)),
+      child: Text(
+        text.toUpperCase(),
+        style: AppText.sans(8.5, weight: FontWeight.w800, color: foreground, letterSpacing: 1.1, height: 1.1),
+      ),
     );
   }
 }
 
 class QuantityStepper extends StatelessWidget {
-  const QuantityStepper({super.key, required this.value, required this.onChanged, this.min = 1, this.max = 10, this.compact = false});
+  const QuantityStepper({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.min = 1,
+    this.max = 10,
+    this.compact = false,
+  });
 
   final int value;
   final ValueChanged<int> onChanged;
@@ -247,7 +257,11 @@ class QuantityStepper extends StatelessWidget {
           button(Icons.remove_rounded, value > min ? () => onChanged(value - 1) : null, 'Decrease quantity'),
           SizedBox(
             width: compact ? 18 : 24,
-            child: Text('$value', textAlign: TextAlign.center, style: AppText.sans(compact ? 13.5 : 15, weight: FontWeight.w700)),
+            child: Text(
+              '$value',
+              textAlign: TextAlign.center,
+              style: AppText.sans(compact ? 13.5 : 15, weight: FontWeight.w700),
+            ),
           ),
           button(Icons.add_rounded, value < max ? () => onChanged(value + 1) : null, 'Increase quantity'),
         ],
@@ -287,7 +301,11 @@ class GlassIconButton extends StatelessWidget {
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onPressed,
-          child: SizedBox(width: size, height: size, child: Icon(icon, size: iconSize, color: color)),
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Icon(icon, size: iconSize, color: color),
+          ),
         ),
       ),
     );
@@ -346,10 +364,14 @@ class BagButton extends StatelessWidget {
         tooltip: 'Bag',
         onPressed: () => context.go('/bag'),
         icon: Badge(
+          offset: const Offset(7, -5),
           isLabelVisible: cart.count > 0,
           backgroundColor: BrandColors.gold,
           textColor: Colors.white,
-          label: Text('${cart.count}', style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white)),
+          label: Text(
+            '${cart.count}',
+            style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white),
+          ),
           child: Icon(Icons.shopping_bag_outlined, color: color),
         ),
       ),
@@ -369,10 +391,14 @@ class WishlistIconButton extends StatelessWidget {
         tooltip: 'Wishlist',
         onPressed: () => context.push('/wishlist'),
         icon: Badge(
+          offset: const Offset(7, -5),
           isLabelVisible: wishlist.count > 0,
           backgroundColor: BrandColors.ink,
           textColor: BrandColors.paper,
-          label: Text('${wishlist.count}', style: AppText.sans(9.5, weight: FontWeight.w800, color: BrandColors.paper)),
+          label: Text(
+            '${wishlist.count}',
+            style: AppText.sans(9.5, weight: FontWeight.w800, color: BrandColors.paper),
+          ),
           child: const Icon(Icons.favorite_border_rounded),
         ),
       ),
@@ -416,10 +442,13 @@ class EmptyState extends StatelessWidget {
           const SizedBox(height: 22),
           Text(title, textAlign: TextAlign.center, style: AppText.display(28)),
           const SizedBox(height: 8),
-          Text(message, textAlign: TextAlign.center, style: AppText.sans(14.5, color: BrandColors.inkSoft, height: 1.5)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: AppText.sans(14.5, color: BrandColors.inkSoft, height: 1.5),
+          ),
           const SizedBox(height: 24),
-          if (primaryLabel != null)
-            FilledButton(onPressed: onPrimary, child: Text(primaryLabel!.toUpperCase())),
+          if (primaryLabel != null) FilledButton(onPressed: onPrimary, child: Text(primaryLabel!.toUpperCase())),
           if (secondaryLabel != null) ...[
             const SizedBox(height: 10),
             OutlinedButton(onPressed: onSecondary, child: Text(secondaryLabel!.toUpperCase())),
@@ -438,7 +467,9 @@ void showToast(BuildContext context, String message, {String? actionLabel, VoidC
     SnackBar(
       content: Text(message),
       duration: const Duration(milliseconds: 2600),
-      action: actionLabel == null ? null : SnackBarAction(label: actionLabel.toUpperCase(), onPressed: onAction ?? () {}),
+      action: actionLabel == null
+          ? null
+          : SnackBarAction(label: actionLabel.toUpperCase(), onPressed: onAction ?? () {}),
     ),
   );
 }
@@ -462,7 +493,13 @@ class BackOrHomeButton extends StatelessWidget {
 
 /// Paper card with a hairline border.
 class PaperCard extends StatelessWidget {
-  const PaperCard({super.key, required this.child, this.padding = const EdgeInsets.all(18), this.color = BrandColors.card, this.radius = 22});
+  const PaperCard({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(18),
+    this.color = BrandColors.card,
+    this.radius = 22,
+  });
 
   final Widget child;
   final EdgeInsets padding;
@@ -477,7 +514,9 @@ class PaperCard extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: BrandColors.line.withValues(alpha: 0.8)),
-        boxShadow: [BoxShadow(color: BrandColors.ink.withValues(alpha: 0.03), blurRadius: 18, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(color: BrandColors.ink.withValues(alpha: 0.03), blurRadius: 18, offset: const Offset(0, 6)),
+        ],
       ),
       child: child,
     );
@@ -500,9 +539,19 @@ class AmountRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(label, style: AppText.sans(14, color: accent ?? BrandColors.inkSoft, weight: bold ? FontWeight.w700 : FontWeight.w500)),
+            child: Text(
+              label,
+              style: AppText.sans(
+                14,
+                color: accent ?? BrandColors.inkSoft,
+                weight: bold ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
           ),
-          Text(value, style: AppText.sans(14, weight: FontWeight.w700, color: accent ?? BrandColors.ink)),
+          Text(
+            value,
+            style: AppText.sans(14, weight: FontWeight.w700, color: accent ?? BrandColors.ink),
+          ),
         ],
       ),
     );

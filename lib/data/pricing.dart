@@ -54,12 +54,7 @@ class Totals {
   final int total;
 }
 
-Totals computeTotals({
-  required int subtotal,
-  Coupon? coupon,
-  required ShippingMethod method,
-  int pointsToRedeem = 0,
-}) {
+Totals computeTotals({required int subtotal, Coupon? coupon, required ShippingMethod method, int pointsToRedeem = 0}) {
   final discount = couponDiscount(coupon, subtotal);
   final freeShip = coupon?.type == CouponType.freeShip && subtotal >= coupon!.minSubtotal;
   final shipping = shippingFee(subtotal, method, freeShipCoupon: freeShip);
@@ -121,13 +116,7 @@ const kCoupons = [
     value: 500,
     minSubtotal: 5000,
   ),
-  Coupon(
-    code: 'FREESHIP',
-    description: 'Free standard shipping',
-    type: CouponType.freeShip,
-    value: 0,
-    minSubtotal: 0,
-  ),
+  Coupon(code: 'FREESHIP', description: 'Free standard shipping', type: CouponType.freeShip, value: 0, minSubtotal: 0),
   Coupon(
     code: 'EID25',
     description: 'Eid special — 25% off (expired)',

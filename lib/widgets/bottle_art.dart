@@ -22,16 +22,11 @@ class BottleArt extends StatelessWidget {
     this.alignment = Alignment.center,
   });
 
-  BottleArt.product(
-    Product p, {
-    super.key,
-    this.bare = false,
-    bool showName = true,
-    this.alignment = Alignment.center,
-  }) : dark = p.dark,
-       light = p.light,
-       shape = p.shape,
-       name = showName ? p.name : '';
+  BottleArt.product(Product p, {super.key, this.bare = false, bool showName = true, this.alignment = Alignment.center})
+    : dark = p.dark,
+      light = p.light,
+      shape = p.shape,
+      name = showName ? p.name : '';
 
   final Color dark;
   final Color light;
@@ -53,14 +48,7 @@ class BottleArt extends StatelessWidget {
       image: true,
       child: RepaintBoundary(
         child: CustomPaint(
-          painter: BottlePainter(
-            dark: dark,
-            light: light,
-            shape: shape,
-            name: name,
-            bare: bare,
-            alignment: alignment,
-          ),
+          painter: BottlePainter(dark: dark, light: light, shape: shape, name: name, bare: bare, alignment: alignment),
           child: const SizedBox.expand(),
         ),
       ),
@@ -132,11 +120,10 @@ class BottlePainter extends CustomPainter {
     canvas.drawRect(
       full,
       Paint()
-        ..shader = ui.Gradient.linear(
-          full.topCenter,
-          full.bottomCenter,
-          [light.withValues(alpha: 0.16), light.withValues(alpha: 0.5)],
-        ),
+        ..shader = ui.Gradient.linear(full.topCenter, full.bottomCenter, [
+          light.withValues(alpha: 0.16),
+          light.withValues(alpha: 0.5),
+        ]),
     );
     final center = box.topLeft + const Offset(200, 270) * s;
     canvas.drawCircle(
@@ -151,10 +138,7 @@ class BottlePainter extends CustomPainter {
       center,
       150 * s,
       Paint()
-        ..shader = ui.Gradient.radial(center, 150 * s, [
-          _white.withValues(alpha: 0.75),
-          _white.withValues(alpha: 0),
-        ]),
+        ..shader = ui.Gradient.radial(center, 150 * s, [_white.withValues(alpha: 0.75), _white.withValues(alpha: 0)]),
     );
   }
 
@@ -173,41 +157,47 @@ class BottlePainter extends CustomPainter {
 
   Shader _liquid(Rect r) => _bbox(r, 0, 1, [light.withValues(alpha: 0.95), light, dark], const [0, 0.55, 1]);
 
-  Shader _glass(Rect r) => _bbox(r, 1, 0, [
-    _white.withValues(alpha: 0.32),
-    _white.withValues(alpha: 0.04),
-    _black.withValues(alpha: 0.04),
-    _black.withValues(alpha: 0.22),
-  ], const [0, 0.18, 0.75, 1]);
+  Shader _glass(Rect r) => _bbox(
+    r,
+    1,
+    0,
+    [
+      _white.withValues(alpha: 0.32),
+      _white.withValues(alpha: 0.04),
+      _black.withValues(alpha: 0.04),
+      _black.withValues(alpha: 0.22),
+    ],
+    const [0, 0.18, 0.75, 1],
+  );
 
-  Shader _cap(Rect r) => _bbox(r, 1, 0, [
-    dark,
-    dark.withValues(alpha: 0.85),
-    light.withValues(alpha: 0.9),
-    dark,
-    dark,
-  ], const [0, 0.35, 0.5, 0.62, 1]);
+  Shader _cap(Rect r) => _bbox(
+    r,
+    1,
+    0,
+    [dark, dark.withValues(alpha: 0.85), light.withValues(alpha: 0.9), dark, dark],
+    const [0, 0.35, 0.5, 0.62, 1],
+  );
 
-  Shader _gold(Rect r) => _bbox(r, 1, 1, const [
-    Color(0xff8a6332),
-    Color(0xffecd09a),
-    Color(0xffa87d45),
-    Color(0xffd8b67c),
-  ], const [0, 0.45, 0.7, 1]);
+  Shader _gold(Rect r) => _bbox(
+    r,
+    1,
+    1,
+    const [Color(0xff8a6332), Color(0xffecd09a), Color(0xffa87d45), Color(0xffd8b67c)],
+    const [0, 0.45, 0.7, 1],
+  );
 
-  Shader _crystal(Rect r) => _bbox(r, 1, 1, [
-    _white.withValues(alpha: 0.9),
-    light.withValues(alpha: 0.6),
-    dark.withValues(alpha: 0.7),
-  ], const [0, 0.5, 1]);
+  Shader _crystal(Rect r) => _bbox(
+    r,
+    1,
+    1,
+    [_white.withValues(alpha: 0.9), light.withValues(alpha: 0.6), dark.withValues(alpha: 0.7)],
+    const [0, 0.5, 1],
+  );
 
   Shader _boxFill(Rect r) => _bbox(r, 1, 1, [dark, dark.withValues(alpha: 0.8)], const [0, 1]);
 
-  Shader _flame(Rect r) => _bbox(r, 0, 1, const [
-    Color(0xfffff3c4),
-    Color(0xfff6a943),
-    Color(0xffc8561c),
-  ], const [0, 0.6, 1]);
+  Shader _flame(Rect r) =>
+      _bbox(r, 0, 1, const [Color(0xfffff3c4), Color(0xfff6a943), Color(0xffc8561c)], const [0, 0.6, 1]);
 
   // ── Drawing primitives ──
 
@@ -265,11 +255,7 @@ class BottlePainter extends CustomPainter {
     _text(
       c,
       'BALINCIA',
-      _brandStyle.copyWith(
-        fontSize: math.max(6.5, w * 0.065),
-        letterSpacing: math.max(2, w * 0.03),
-        color: dark,
-      ),
+      _brandStyle.copyWith(fontSize: math.max(6.5, w * 0.065), letterSpacing: math.max(2, w * 0.03), color: dark),
       x + w / 2,
       y + h * 0.36,
     );
@@ -285,7 +271,14 @@ class BottlePainter extends CustomPainter {
     final label = name.length > 16 ? '${name.substring(0, 15)}…' : name;
     if (label.isNotEmpty) {
       final size = math.max(8.0, math.min(14.0, (w * 1.5) / math.max(label.length, 6)));
-      _text(c, label, _nameStyle.copyWith(fontSize: size, color: dark), x + w / 2, y + h * 0.72, maxWidth: w - 12);
+      _text(
+        c,
+        label,
+        _nameStyle.copyWith(fontSize: size, color: dark),
+        x + w / 2,
+        y + h * 0.72,
+        maxWidth: w - 12,
+      );
     }
   }
 
@@ -433,7 +426,15 @@ class BottlePainter extends CustomPainter {
       ..color = const Color(0xff4a3626)
       ..strokeWidth = 3.5
       ..strokeCap = StrokeCap.round;
-    const tips = [(112.0, 64.0), (150.0, 46.0), (196.0, 38.0), (242.0, 46.0), (284.0, 66.0), (128.0, 96.0), (268.0, 96.0)];
+    const tips = [
+      (112.0, 64.0),
+      (150.0, 46.0),
+      (196.0, 38.0),
+      (242.0, 46.0),
+      (284.0, 66.0),
+      (128.0, 96.0),
+      (268.0, 96.0),
+    ];
     for (final (x, y) in tips) {
       c.drawLine(const Offset(200, 292), Offset(x, y), reed);
     }
@@ -473,7 +474,10 @@ class BottlePainter extends CustomPainter {
     final jar = _rr(108, 232, 184, 212, 18);
     _fill(c, jar, color: dark);
     _fill(c, jar, shader: _glass);
-    c.drawOval(Rect.fromCenter(center: const Offset(200, 240), width: 172, height: 24), Paint()..color = const Color(0xfff3e9d9));
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(200, 240), width: 172, height: 24),
+      Paint()..color = const Color(0xfff3e9d9),
+    );
     _flat(c, 120, 252, 10, 170, 5, _white, 0.18);
     _label(c, 146, 312, 108, 70);
   }

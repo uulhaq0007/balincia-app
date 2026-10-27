@@ -32,7 +32,10 @@ class BagScreen extends StatelessWidget {
                 children: [
                   TextSpan(text: 'Your bag', style: AppText.display(30)),
                   if (!cart.isEmpty)
-                    TextSpan(text: '  (${cart.count})', style: AppText.display(18, color: BrandColors.muted)),
+                    TextSpan(
+                      text: '  (${cart.count})',
+                      style: AppText.display(18, color: BrandColors.muted),
+                    ),
                 ],
               ),
             ),
@@ -56,22 +59,22 @@ class BagScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                   children: [
                     FreeShippingMeter(
+                      compact: true,
                       subtotal: cart.subtotal,
                       freeShipCoupon: cart.coupon?.type == CouponType.freeShip,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     for (final item in cart.items) _BagItem(item: item, cart: cart),
-                    const SizedBox(height: 14),
-                    _DiscountCode(cart: cart),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     _PointsCard(cart: cart, balance: account.points),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                     PaperCard(
-                      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SectionLabel('Order summary'),
+                          _DiscountCode(cart: cart),
+                          const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider()),
                           TotalsBreakdown(
                             subtotal: totals.subtotal,
                             discount: totals.discount,
@@ -115,12 +118,7 @@ class _BagItem extends StatelessWidget {
 
   void _remove(BuildContext context) {
     final index = cart.remove(item);
-    showToast(
-      context,
-      '${item.product.name} removed',
-      actionLabel: 'Undo',
-      onAction: () => cart.restore(item, index),
-    );
+    showToast(context, '${item.product.name} removed', actionLabel: 'Undo', onAction: () => cart.restore(item, index));
   }
 
   @override
@@ -138,8 +136,8 @@ class _BagItem extends StatelessWidget {
         child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: BrandColors.card,
           borderRadius: BorderRadius.circular(20),
@@ -150,12 +148,12 @@ class _BagItem extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () => context.push('/product/${p.slug}'),
-              child: BottleThumb(product: p, width: 88, height: 110, radius: 14),
+              child: BottleThumb(product: p, width: 66, height: 82, radius: 14),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: SizedBox(
-                height: 110,
+                height: 82,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -166,8 +164,13 @@ class _BagItem extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.display(18.5, height: 1.15)),
-                              const SizedBox(height: 2),
+                              Text(
+                                p.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppText.display(17.5, height: 1.15),
+                              ),
+                              const SizedBox(height: 1),
                               Text(
                                 '${item.variant.label} · ${formatPrice(item.variant.price)}',
                                 style: AppText.sans(12.5, color: BrandColors.muted),
@@ -198,7 +201,13 @@ class _BagItem extends StatelessWidget {
                           onChanged: (q) => cart.setQuantity(item, q),
                         ),
                         const Spacer(),
-                        Text(formatPrice(item.lineTotal), style: AppText.display(18, weight: FontWeight.w500)),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6),
+                          child: Text(
+                            formatPrice(item.lineTotal),
+                            style: AppText.display(17.5, weight: FontWeight.w500),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -245,84 +254,90 @@ class _DiscountCodeState extends State<_DiscountCode> {
     final cart = widget.cart;
     final coupon = cart.coupon;
     final discount = cart.totals.discount;
-    return PaperCard(
-      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionLabel('Discount code'),
-          if (coupon != null)
-            Container(
-              padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
-              decoration: BoxDecoration(
-                color: const Color(0xffe6ece3),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: BrandColors.sage.withValues(alpha: 0.25)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.sell_outlined, size: 18, color: BrandColors.sage),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(coupon.code, style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage, letterSpacing: 0.8)),
-                        Text(coupon.description, style: AppText.sans(12, color: BrandColors.inkSoft)),
-                      ],
-                    ),
-                  ),
-                  if (discount > 0)
-                    Text('− ${formatPrice(discount)}', style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage)),
-                  IconButton(
-                    tooltip: 'Remove code',
-                    onPressed: cart.removeCoupon,
-                    icon: const Icon(Icons.close_rounded, size: 18),
-                  ),
-                ],
-              ),
-            )
-          else
-            Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionLabel('Discount code'),
+        if (coupon != null)
+          Container(
+            padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
+            decoration: BoxDecoration(
+              color: const Color(0xffe6ece3),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: BrandColors.sage.withValues(alpha: 0.25)),
+            ),
+            child: Row(
               children: [
+                const Icon(Icons.sell_outlined, size: 18, color: BrandColors.sage),
+                const SizedBox(width: 10),
                 Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    textCapitalization: TextCapitalization.characters,
-                    onSubmitted: (_) => _apply(),
-                    style: AppText.sans(14, weight: FontWeight.w700, letterSpacing: 0.8),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: 'Enter code',
-                      errorText: null,
-                      prefixIcon: const Icon(Icons.sell_outlined, size: 18, color: BrandColors.muted),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 13),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: _error == null ? BrandColors.line : BrandColors.sale),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coupon.code,
+                        style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage, letterSpacing: 0.8),
                       ),
-                    ),
+                      Text(coupon.description, style: AppText.sans(12, color: BrandColors.inkSoft)),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 46,
-                  child: OutlinedButton(onPressed: _apply, child: const Text('APPLY')),
+                if (discount > 0)
+                  Text(
+                    '− ${formatPrice(discount)}',
+                    style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage),
+                  ),
+                IconButton(
+                  tooltip: 'Remove code',
+                  onPressed: cart.removeCoupon,
+                  icon: const Icon(Icons.close_rounded, size: 18),
                 ),
               ],
             ),
-          const SizedBox(height: 8),
-          if (_error != null && coupon == null)
-            Text(_error!, style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600))
-          else if (cart.couponBelowMinimum)
-            Text(
-              'Add ${formatPrice(coupon!.minSubtotal - cart.subtotal)} more to use this code.',
-              style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600),
-            )
-          else if (coupon == null)
-            Text('Try WELCOME10 for 10% off orders over Rs. 2,000.', style: AppText.sans(12, color: BrandColors.muted)),
-        ],
-      ),
+          )
+        else
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  textCapitalization: TextCapitalization.characters,
+                  onSubmitted: (_) => _apply(),
+                  style: AppText.sans(14, weight: FontWeight.w700, letterSpacing: 0.8),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: 'Enter code',
+                    errorText: null,
+                    prefixIcon: const Icon(Icons.sell_outlined, size: 18, color: BrandColors.muted),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 13),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide(color: _error == null ? BrandColors.line : BrandColors.sale),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                height: 46,
+                child: OutlinedButton(onPressed: _apply, child: const Text('APPLY')),
+              ),
+            ],
+          ),
+        const SizedBox(height: 8),
+        if (_error != null && coupon == null)
+          Text(
+            _error!,
+            style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600),
+          )
+        else if (cart.couponBelowMinimum)
+          Text(
+            'Add ${formatPrice(coupon!.minSubtotal - cart.subtotal)} more to use this code.',
+            style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600),
+          )
+        else if (coupon == null)
+          Text('Try WELCOME10 for 10% off orders over Rs. 2,000.', style: AppText.sans(12, color: BrandColors.muted)),
+      ],
     );
   }
 }
@@ -337,9 +352,9 @@ class _PointsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final redeemable = cart.redeemablePoints;
     return Container(
-      padding: const EdgeInsets.fromLTRB(18, 16, 12, 16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 10, 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -349,15 +364,15 @@ class _PointsCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: BrandColors.gold2.withValues(alpha: 0.5)),
             ),
-            child: const Icon(Icons.workspace_premium_outlined, color: BrandColors.gold2, size: 22),
+            child: const Icon(Icons.workspace_premium_outlined, color: BrandColors.gold2, size: 20),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,7 +382,10 @@ class _PointsCard extends StatelessWidget {
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Use $redeemable', style: AppText.sans(14, weight: FontWeight.w800, color: BrandColors.paper)),
+                      TextSpan(
+                        text: 'Use $redeemable',
+                        style: AppText.sans(14, weight: FontWeight.w800, color: BrandColors.paper),
+                      ),
                       TextSpan(
                         text: ' of your $balance points',
                         style: AppText.sans(14, color: BrandColors.paper.withValues(alpha: 0.8)),
@@ -383,10 +401,7 @@ class _PointsCard extends StatelessWidget {
               ],
             ),
           ),
-          Switch(
-            value: cart.usePoints && redeemable > 0,
-            onChanged: redeemable == 0 ? null : cart.setUsePoints,
-          ),
+          Switch(value: cart.usePoints && redeemable > 0, onChanged: redeemable == 0 ? null : cart.setUsePoints),
         ],
       ),
     );
@@ -416,7 +431,10 @@ class _CheckoutBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('TOTAL · ${pluralize(items, 'ITEM')}', style: AppText.sans(10, weight: FontWeight.w800, color: BrandColors.muted, letterSpacing: 1.3)),
+                Text(
+                  'TOTAL · ${pluralize(items, 'ITEM')}',
+                  style: AppText.sans(10, weight: FontWeight.w800, color: BrandColors.muted, letterSpacing: 1.3),
+                ),
                 Text(formatPrice(total), style: AppText.display(23, weight: FontWeight.w500)),
               ],
             ),

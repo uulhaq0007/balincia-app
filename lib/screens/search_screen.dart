@@ -74,7 +74,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       icon: const Icon(Icons.close_rounded, size: 19),
                     ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(99), borderSide: const BorderSide(color: BrandColors.line)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(99),
+                borderSide: const BorderSide(color: BrandColors.line),
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(99),
                 borderSide: const BorderSide(color: BrandColors.line),
@@ -87,7 +90,10 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: q.isEmpty ? _Suggestions(onPick: _setQuery) : _Results(query: q, results: results),
+      body: SafeArea(
+        top: false,
+        child: q.isEmpty ? _Suggestions(onPick: _setQuery) : _Results(query: q, results: results),
+      ),
     );
   }
 }
@@ -222,7 +228,12 @@ class _ResultRow extends StatelessWidget {
                 children: [
                   Text(p.name, style: AppText.display(17.5)),
                   const SizedBox(height: 2),
-                  Text(p.tagline, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.sans(12.5, color: BrandColors.inkSoft)),
+                  Text(
+                    p.tagline,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.sans(12.5, color: BrandColors.inkSoft),
+                  ),
                   const SizedBox(height: 5),
                   Row(
                     children: [

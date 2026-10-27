@@ -56,9 +56,7 @@ class AccountStore extends ChangeNotifier {
       number: _newNumber(),
       placedAt: DateTime.now(),
       status: OrderStatus.pending,
-      lines: [
-        for (final i in cart.items) OrderLine(product: i.product, variant: i.variant, quantity: i.quantity),
-      ],
+      lines: [for (final i in cart.items) OrderLine(product: i.product, variant: i.variant, quantity: i.quantity)],
       subtotal: totals.subtotal,
       discount: totals.discount,
       pointsRedeemed: totals.points,

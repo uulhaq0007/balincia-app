@@ -143,13 +143,7 @@ class Order {
 }
 
 class Review {
-  const Review({
-    required this.name,
-    required this.rating,
-    required this.title,
-    required this.body,
-    required this.date,
-  });
+  const Review({required this.name, required this.rating, required this.title, required this.body, required this.date});
 
   final String name;
   final int rating;

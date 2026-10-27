@@ -7,7 +7,7 @@ import '../models/product.dart';
 /// The bag: line items, an applied discount code, points redemption and the
 /// shipping method. Totals always go through the ported pricing rules.
 class CartStore extends ChangeNotifier {
-  CartStore({required int Function() pointsBalance}) : _pointsBalance = pointsBalance;
+  CartStore(this._pointsBalance);
 
   final int Function() _pointsBalance;
   final List<CartItem> _items = [];
@@ -46,8 +46,7 @@ class CartStore extends ChangeNotifier {
 
   int get pointsToEarn => pointsEarned(totals.total);
 
-  int quantityOf(Product p) =>
-      _items.where((i) => i.product.slug == p.slug).fold(0, (s, i) => s + i.quantity);
+  int quantityOf(Product p) => _items.where((i) => i.product.slug == p.slug).fold(0, (s, i) => s + i.quantity);
 
   void add(Product product, Variant variant, {int quantity = 1}) {
     final existing = _items.where((i) => i.product.slug == product.slug && i.variant.label == variant.label);

@@ -98,7 +98,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       _Field(controller: _line1, label: 'Address', icon: Icons.home_outlined),
                       Row(
                         children: [
-                          Expanded(flex: 3, child: _Field(controller: _city, label: 'City', icon: Icons.location_city_outlined)),
+                          Expanded(
+                            flex: 3,
+                            child: _Field(controller: _city, label: 'City', icon: Icons.location_city_outlined),
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
                             flex: 2,
@@ -121,7 +124,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         icon: Icons.local_shipping_outlined,
                         title: 'Standard',
                         subtitle: '2–4 working days, nationwide',
-                        trailing: shippingFee(cart.subtotal, ShippingMethod.standard, freeShipCoupon: cart.coupon?.type == CouponType.freeShip) == 0
+                        trailing:
+                            shippingFee(
+                                  cart.subtotal,
+                                  ShippingMethod.standard,
+                                  freeShipCoupon: cart.coupon?.type == CouponType.freeShip,
+                                ) ==
+                                0
                             ? 'Free'
                             : formatPrice(StoreConfig.standardShippingFee),
                       ),
@@ -169,10 +178,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         'Your order',
                         trailing: TextButton(
                           onPressed: () => context.canPop() ? context.pop() : context.go('/bag'),
-                          child: Text('Edit bag', style: AppText.sans(12.5, weight: FontWeight.w700, color: BrandColors.gold)),
+                          child: Text(
+                            'Edit bag',
+                            style: AppText.sans(12.5, weight: FontWeight.w700, color: BrandColors.gold),
+                          ),
                         ),
                       ),
-                      for (final i in cart.items) OrderLineTile(product: i.product, variant: i.variant, quantity: i.quantity),
+                      for (final i in cart.items)
+                        OrderLineTile(product: i.product, variant: i.variant, quantity: i.quantity),
                       const SizedBox(height: 10),
                       TotalsBreakdown(
                         subtotal: totals.subtotal,
@@ -238,22 +251,22 @@ class _Steps extends StatelessWidget {
             color: on ? BrandColors.ink : Colors.transparent,
             border: Border.all(color: on ? BrandColors.ink : BrandColors.line),
           ),
-          child: Text('$n', style: AppText.sans(11, weight: FontWeight.w800, color: on ? BrandColors.paper : BrandColors.muted)),
+          child: Text(
+            '$n',
+            style: AppText.sans(11, weight: FontWeight.w800, color: on ? BrandColors.paper : BrandColors.muted),
+          ),
         ),
         const SizedBox(width: 6),
-        Text(label, style: AppText.sans(12.5, weight: FontWeight.w700, color: on ? BrandColors.ink : BrandColors.muted)),
+        Text(
+          label,
+          style: AppText.sans(12.5, weight: FontWeight.w700, color: on ? BrandColors.ink : BrandColors.muted),
+        ),
       ],
     );
-    Widget rule() => Expanded(child: Container(height: 1, margin: const EdgeInsets.symmetric(horizontal: 8), color: BrandColors.line));
-    return Row(
-      children: [
-        step(1, 'Bag', true),
-        rule(),
-        step(2, 'Details', true),
-        rule(),
-        step(3, 'Confirmed', false),
-      ],
+    Widget rule() => Expanded(
+      child: Container(height: 1, margin: const EdgeInsets.symmetric(horizontal: 8), color: BrandColors.line),
     );
+    return Row(children: [step(1, 'Bag', true), rule(), step(2, 'Details', true), rule(), step(3, 'Confirmed', false)]);
   }
 }
 

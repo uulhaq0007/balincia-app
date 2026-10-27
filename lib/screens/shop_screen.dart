@@ -24,6 +24,13 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   late final Collection? _collection = widget.collectionSlug == null ? null : resolveCollection(widget.collectionSlug!);
   late CatalogFilters _filters;
+  final _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
 
   /// Filters shown for `/shop?filters=1`: men's woody/oud winter scents that last 8+ hours.
   static const _demoFilters = CatalogFilters(
@@ -47,8 +54,11 @@ class _ShopScreenState extends State<ShopScreen> {
         ? _demoFilters
         : (widget.query.containsKey('sort') ? parsed : parsed.copyWith(sort: _collection?.defaultSort ?? 'featured'));
     if (demo) {
+      // Scroll the banner away so the filtered grid shows behind the sheet.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _openFilters();
+        if (!mounted) return;
+        if (_scroll.hasClients) _scroll.jumpTo(_bannerExtent);
+        _openFilters();
       });
     }
   }
@@ -80,6 +90,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
     return Scaffold(
       body: CustomScrollView(
+        controller: _scroll,
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -100,8 +111,7 @@ class _ShopScreenState extends State<ShopScreen> {
           SliverToBoxAdapter(
             child: _Banner(
               title: collection?.name ?? 'The Library',
-              description: collection?.description ??
-                  'Every Balincia perfume, attar and home fragrance in one place. Filter by mood, season or note to find yours.',
+              description: collection?.description ?? 'Every Balincia perfume, attar and home fragrance in one place. Filter by mood, season or note to find yours.',
               dark: collection?.dark ?? const Color(0xff2b2118),
               light: collection?.light ?? const Color(0xffc9a27a),
               shape: collection?.shape ?? BottleShape.classic,
@@ -119,10 +129,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
           if (!_filters.isEmpty || _filters.q != null)
             SliverToBoxAdapter(
-              child: _ActiveFilters(
-                filters: _filters,
-                onChanged: (f) => setState(() => _filters = f),
-              ),
+              child: _ActiveFilters(filters: _filters, onChanged: (f) => setState(() => _filters = f)),
             )
           else
             SliverToBoxAdapter(
@@ -148,6 +155,9 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 }
 
+/// Height of the banner sliver including its padding.
+const double _bannerExtent = 128 + 6 + 4;
+
 class _Banner extends StatelessWidget {
   const _Banner({
     required this.title,
@@ -170,7 +180,7 @@ class _Banner extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 6, 16, 4),
       child: Container(
-        height: 168,
+        height: 128,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26),
@@ -183,32 +193,37 @@ class _Banner extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              right: 44,
+              right: 50,
               bottom: -8,
-              width: 74,
-              height: 96,
-              child: Opacity(opacity: 0.75, child: BottleArt(dark: dark, light: light, shape: BottleShape.round, bare: true)),
+              width: 62,
+              height: 80,
+              child: Opacity(
+                opacity: 0.75,
+                child: BottleArt(dark: dark, light: light, shape: BottleShape.round, bare: true),
+              ),
             ),
             Positioned(
-              right: -6,
+              right: 0,
               bottom: -6,
-              width: 104,
-              height: 150,
+              width: 84,
+              height: 120,
               child: BottleArt(dark: dark, light: light, shape: shape, bare: true),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 130, 16),
+              padding: const EdgeInsets.fromLTRB(20, 16, 124, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    description,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.sans(13, color: dark.withValues(alpha: 0.85), height: 1.45),
+                  Text('$count SCENTS', style: AppText.eyebrow(color: dark.withValues(alpha: 0.75), size: 10)),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: Text(
+                      description,
+                      maxLines: 4,
+                      overflow: TextOverflow.fade,
+                      style: AppText.sans(12.5, color: dark.withValues(alpha: 0.85), height: 1.45),
+                    ),
                   ),
-                  const Spacer(),
-                  Text('$count SCENTS', style: AppText.eyebrow(color: dark.withValues(alpha: 0.7), size: 10)),
                 ],
               ),
             ),
@@ -259,7 +274,11 @@ class _ToolbarDelegate extends SliverPersistentHeaderDelegate {
                     const SizedBox(width: 8),
                     Text(
                       active > 0 ? 'Filters · $active' : 'Filters',
-                      style: AppText.sans(13, weight: FontWeight.w700, color: active > 0 ? BrandColors.paper : BrandColors.ink),
+                      style: AppText.sans(
+                        13,
+                        weight: FontWeight.w700,
+                        color: active > 0 ? BrandColors.paper : BrandColors.ink,
+                      ),
                     ),
                   ],
                 ),
@@ -312,8 +331,7 @@ class _ToolbarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_ToolbarDelegate old) =>
-      old.filters != filters || old.resultCount != resultCount;
+  bool shouldRebuild(_ToolbarDelegate old) => old.filters != filters || old.resultCount != resultCount;
 }
 
 /// Removable chips for every active refinement.
@@ -334,10 +352,7 @@ class _ActiveFilters extends StatelessWidget {
       for (final v in filters.genre) (labelFor(kGenres, v), filters.toggle('genre', v)),
       if (filters.priceRange != null) (filters.priceRange!.label, filters.copyWith(clearPrice: true)),
       if (filters.longevity != null)
-        (
-          labelFor(kLongevityOptions, '${filters.longevity}'),
-          filters.copyWith(clearLongevity: true),
-        ),
+        (labelFor(kLongevityOptions, '${filters.longevity}'), filters.copyWith(clearLongevity: true)),
       if (filters.sale) ('On sale', filters.copyWith(sale: false)),
     ];
     return SizedBox(
@@ -363,10 +378,10 @@ class _ActiveFilters extends StatelessWidget {
             onPressed: () => onChanged(filters.cleared().copyWith(clearQ: true)),
             child: Text(
               'Clear all',
-              style: AppText.sans(12.5, weight: FontWeight.w700).copyWith(
-                decoration: TextDecoration.underline,
-                decorationColor: BrandColors.gold,
-              ),
+              style: AppText.sans(
+                12.5,
+                weight: FontWeight.w700,
+              ).copyWith(decoration: TextDecoration.underline, decorationColor: BrandColors.gold),
             ),
           ),
         ],
@@ -392,15 +407,27 @@ class _QuickFamilies extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, i) {
           final f = kFamilySwatches[i];
-          return ActionChip(
-            onPressed: () => onPick(f.value),
-            avatar: Container(
-              width: 9,
-              height: 9,
-              decoration: BoxDecoration(color: f.color, shape: BoxShape.circle),
+          return Material(
+            color: BrandColors.card,
+            shape: const StadiumBorder(side: BorderSide(color: BrandColors.line)),
+            child: InkWell(
+              customBorder: const StadiumBorder(),
+              onTap: () => onPick(f.value),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 9,
+                      height: 9,
+                      decoration: BoxDecoration(color: f.color, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(f.label, style: AppText.sans(12.5, weight: FontWeight.w600)),
+                  ],
+                ),
+              ),
             ),
-            label: Text(f.label),
-            labelStyle: AppText.sans(12.5, weight: FontWeight.w600),
           );
         },
       ),

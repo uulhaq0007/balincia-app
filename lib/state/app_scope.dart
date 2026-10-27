@@ -13,7 +13,7 @@ class AppState {
   /// A store seeded with the demo bag, wishlist and order history.
   factory AppState.demo() {
     final account = AccountStore();
-    final cart = CartStore(pointsBalance: () => account.points);
+    final cart = CartStore(() => account.points);
     for (final (product, label, qty) in kDemoBag) {
       cart.add(product, product.variants.firstWhere((v) => v.label == label), quantity: qty);
     }

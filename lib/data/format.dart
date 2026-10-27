@@ -17,6 +17,9 @@ const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 
 /// "12 Oct 2026"
 String formatDate(DateTime d) => '${d.day} ${_months[d.month - 1]} ${d.year}';
 
+/// "Oct 2026"
+String formatMonthYear(DateTime d) => '${_months[d.month - 1]} ${d.year}';
+
 /// "12 Oct"
 String formatShortDate(DateTime d) => '${d.day} ${_months[d.month - 1]}';
 
@@ -27,5 +30,4 @@ String formatDateTime(DateTime d) {
   return '${formatShortDate(d)}, $hour:$minute ${d.hour < 12 ? 'am' : 'pm'}';
 }
 
-String pluralize(int n, String singular, [String? plural]) =>
-    '$n ${n == 1 ? singular : (plural ?? '${singular}s')}';
+String pluralize(int n, String singular, [String? plural]) => '$n ${n == 1 ? singular : (plural ?? '${singular}s')}';

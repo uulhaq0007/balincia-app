@@ -123,14 +123,56 @@ class Boutique {
 }
 
 const kBoutiques = [
-  Boutique('Karachi', 'Flagship Atelier — Dolmen Mall Clifton', 'Ground Floor, Dolmen Mall, Block 4 Clifton, Karachi', '+92 21 3529 0000', '11am – 10pm'),
-  Boutique('Karachi', 'LuckyOne Mall', 'First Floor, LuckyOne Mall, Rashid Minhas Road, Karachi', '+92 21 3630 0000', '11am – 10pm'),
-  Boutique('Lahore', 'Emporium Mall', 'Ground Floor, Emporium Mall, Johar Town, Lahore', '+92 42 3531 0000', '11am – 10pm'),
-  Boutique('Lahore', 'MM Alam Road Boutique', 'Shop 12, MM Alam Road, Gulberg III, Lahore', '+92 42 3575 0000', '12pm – 11pm'),
+  Boutique(
+    'Karachi',
+    'Flagship Atelier — Dolmen Mall Clifton',
+    'Ground Floor, Dolmen Mall, Block 4 Clifton, Karachi',
+    '+92 21 3529 0000',
+    '11am – 10pm',
+  ),
+  Boutique(
+    'Karachi',
+    'LuckyOne Mall',
+    'First Floor, LuckyOne Mall, Rashid Minhas Road, Karachi',
+    '+92 21 3630 0000',
+    '11am – 10pm',
+  ),
+  Boutique(
+    'Lahore',
+    'Emporium Mall',
+    'Ground Floor, Emporium Mall, Johar Town, Lahore',
+    '+92 42 3531 0000',
+    '11am – 10pm',
+  ),
+  Boutique(
+    'Lahore',
+    'MM Alam Road Boutique',
+    'Shop 12, MM Alam Road, Gulberg III, Lahore',
+    '+92 42 3575 0000',
+    '12pm – 11pm',
+  ),
   Boutique('Islamabad', 'Centaurus Mall', 'Level 2, The Centaurus, F-8, Islamabad', '+92 51 2155 0000', '11am – 10pm'),
-  Boutique('Faisalabad', 'Lyallpur Galleria', 'Ground Floor, Lyallpur Galleria, Canal Road, Faisalabad', '+92 41 8500 000', '11am – 10pm'),
-  Boutique('Multan', 'Mall of Multan', 'First Floor, Mall of Multan, Bosan Road, Multan', '+92 61 6500 000', '11am – 10pm'),
-  Boutique('Peshawar', 'Deans Trade Centre', 'Ground Floor, Deans Trade Centre, Saddar, Peshawar', '+92 91 5250 000', '11am – 9pm'),
+  Boutique(
+    'Faisalabad',
+    'Lyallpur Galleria',
+    'Ground Floor, Lyallpur Galleria, Canal Road, Faisalabad',
+    '+92 41 8500 000',
+    '11am – 10pm',
+  ),
+  Boutique(
+    'Multan',
+    'Mall of Multan',
+    'First Floor, Mall of Multan, Bosan Road, Multan',
+    '+92 61 6500 000',
+    '11am – 10pm',
+  ),
+  Boutique(
+    'Peshawar',
+    'Deans Trade Centre',
+    'Ground Floor, Deans Trade Centre, Saddar, Peshawar',
+    '+92 91 5250 000',
+    '11am – 9pm',
+  ),
 ];
 
 const kConcierge = (

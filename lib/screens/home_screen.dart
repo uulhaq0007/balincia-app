@@ -154,16 +154,24 @@ class _Hero extends StatelessWidget {
             children: [
               Expanded(
                 child: FilledButton(
+                  style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 14)),
                   onPressed: () => context.go('/shop/collections/best-sellers'),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text('BEST SELLERS'), SizedBox(width: 8), Icon(Icons.arrow_forward_rounded, size: 17)],
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [Text('BEST SELLERS'), SizedBox(width: 8), Icon(Icons.arrow_forward_rounded, size: 17)],
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: OutlinedButton(onPressed: () => context.go('/quiz'), child: const Text('FIND MY SCENT')),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 14)),
+                  onPressed: () => context.go('/quiz'),
+                  child: const FittedBox(fit: BoxFit.scaleDown, child: Text('FIND MY SCENT')),
+                ),
               ),
             ],
           ),
@@ -357,8 +365,7 @@ class _NotesMarqueeState extends State<_NotesMarquee> with SingleTickerProviderS
     'Iris',
   ];
 
-  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(seconds: 45))
-    ..repeat();
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(seconds: 45))..repeat();
 
   @override
   void dispose() {
@@ -391,8 +398,7 @@ class _NotesMarqueeState extends State<_NotesMarquee> with SingleTickerProviderS
           alignment: Alignment.centerLeft,
           child: AnimatedBuilder(
             animation: _c,
-            builder: (context, child) =>
-                FractionalTranslation(translation: Offset(-0.5 * _c.value, 0), child: child),
+            builder: (context, child) => FractionalTranslation(translation: Offset(-0.5 * _c.value, 0), child: child),
             child: Row(mainAxisSize: MainAxisSize.min, children: [row(), row()]),
           ),
         ),
@@ -598,7 +604,10 @@ class _FamilyCard extends StatelessWidget {
                     decoration: BoxDecoration(color: family.color, shape: BoxShape.circle),
                   ),
                   const Spacer(),
-                  Text('$count', style: AppText.sans(11, weight: FontWeight.w700, color: BrandColors.muted)),
+                  Text(
+                    '$count',
+                    style: AppText.sans(11, weight: FontWeight.w700, color: BrandColors.muted),
+                  ),
                 ],
               ),
               const Spacer(),
@@ -643,7 +652,12 @@ class _QuizBanner extends StatelessWidget {
                 angle: -0.21,
                 child: const Opacity(
                   opacity: 0.85,
-                  child: BottleArt(dark: Color(0xff5a1a2c), light: Color(0xffe9a3b5), shape: BottleShape.round, bare: true),
+                  child: BottleArt(
+                    dark: Color(0xff5a1a2c),
+                    light: Color(0xffe9a3b5),
+                    shape: BottleShape.round,
+                    bare: true,
+                  ),
                 ),
               ),
             ),
@@ -656,7 +670,12 @@ class _QuizBanner extends StatelessWidget {
                 angle: 0.21,
                 child: const Opacity(
                   opacity: 0.85,
-                  child: BottleArt(dark: Color(0xff12384a), light: Color(0xff7cc6d6), shape: BottleShape.tall, bare: true),
+                  child: BottleArt(
+                    dark: Color(0xff12384a),
+                    light: Color(0xff7cc6d6),
+                    shape: BottleShape.tall,
+                    bare: true,
+                  ),
                 ),
               ),
             ),
@@ -666,11 +685,7 @@ class _QuizBanner extends StatelessWidget {
                 children: [
                   const Eyebrow('Not sure where to start?'),
                   const SizedBox(height: 12),
-                  const EditorialText(
-                    'Meet your scent in *60 seconds*.',
-                    size: 32,
-                    textAlign: TextAlign.center,
-                  ),
+                  const EditorialText('Meet your scent in *60 seconds*.', size: 32, textAlign: TextAlign.center),
                   const SizedBox(height: 10),
                   Text(
                     'Answer five quick questions about the moments, moods and notes you love — we’ll match you with the Balincia scents made for you.',
@@ -689,10 +704,11 @@ class _QuizBanner extends StatelessWidget {
                     onPressed: () => context.go('/shop/collections/discovery-sets'),
                     child: Text(
                       'OR TRY A SAMPLE SET',
-                      style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.4).copyWith(
-                        decoration: TextDecoration.underline,
-                        decorationColor: BrandColors.gold,
-                      ),
+                      style: AppText.sans(
+                        11.5,
+                        weight: FontWeight.w800,
+                        letterSpacing: 1.4,
+                      ).copyWith(decoration: TextDecoration.underline, decorationColor: BrandColors.gold),
                     ),
                   ),
                 ],
@@ -778,10 +794,7 @@ class _Footer extends StatelessWidget {
           ),
           const SizedBox(height: 26),
           FittedBox(
-            child: Text(
-              'BALINCIA',
-              style: AppText.display(96, color: Colors.white.withValues(alpha: 0.07), height: 1),
-            ),
+            child: Text('BALINCIA', style: AppText.display(96, color: Colors.white.withValues(alpha: 0.07), height: 1)),
           ),
           const SizedBox(height: 8),
           Text(

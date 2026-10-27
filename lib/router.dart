@@ -101,11 +101,7 @@ GoRouter buildRouter(AppState state, {String? initialLocation}) {
         parentNavigatorKey: _rootKey,
         builder: (context, s) => SearchScreen(initialQuery: s.uri.queryParameters['q'] ?? ''),
       ),
-      GoRoute(
-        path: '/wishlist',
-        parentNavigatorKey: _rootKey,
-        builder: (context, s) => const WishlistScreen(),
-      ),
+      GoRoute(path: '/wishlist', parentNavigatorKey: _rootKey, builder: (context, s) => const WishlistScreen()),
       GoRoute(
         path: '/checkout',
         parentNavigatorKey: _rootKey,

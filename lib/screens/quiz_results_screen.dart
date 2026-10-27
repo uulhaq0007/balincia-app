@@ -70,7 +70,9 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: _PersonaHero(persona: persona, onRetake: _retake)),
+          SliverToBoxAdapter(
+            child: _PersonaHero(persona: persona, onRetake: _retake),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -86,7 +88,10 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
                         borderRadius: BorderRadius.circular(99),
                         border: Border.all(color: BrandColors.line),
                       ),
-                      child: Text(answerLabel(q.key, answers[q.key]!), style: AppText.sans(12, weight: FontWeight.w600)),
+                      child: Text(
+                        answerLabel(q.key, answers[q.key]!),
+                        style: AppText.sans(12, weight: FontWeight.w600),
+                      ),
                     ),
                 ],
               ),
@@ -97,11 +102,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
               padding: EdgeInsets.fromLTRB(20, 26, 20, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Eyebrow('Matched for you'),
-                  SizedBox(height: 8),
-                  EditorialText('Your top *four*', size: 30),
-                ],
+                children: [Eyebrow('Matched for you'), SizedBox(height: 8), EditorialText('Your top *four*', size: 30)],
               ),
             ),
           ),
@@ -194,25 +195,22 @@ class _PersonaHero extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(8, top + 4, 8, 0),
-            child: Row(
-              children: [
-                BackOrHomeButtonLight(onRetake: onRetake),
-                const Spacer(),
-                IconButton(
-                  tooltip: 'Retake the quiz',
-                  onPressed: onRetake,
-                  icon: const Icon(Icons.refresh_rounded, color: BrandColors.paper),
-                ),
-              ],
-            ),
+            child: Row(children: [BackOrHomeButtonLight(onRetake: onRetake)]),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(28, top + 60, 28, 58),
+            padding: EdgeInsets.fromLTRB(28, top + 48, 28, 46),
             child: Column(
               children: [
-                Text('YOUR SCENT PERSONA', style: AppText.eyebrow(color: persona.light)),
+                Text(
+                  'YOUR SCENT PERSONA',
+                  style: AppText.eyebrow(color: Color.lerp(persona.light, BrandColors.gold2, 0.65)!),
+                ),
                 const SizedBox(height: 14),
-                Text(persona.name, textAlign: TextAlign.center, style: AppText.display(46, color: BrandColors.paper, height: 1)),
+                Text(
+                  persona.name,
+                  textAlign: TextAlign.center,
+                  style: AppText.display(46, color: BrandColors.paper, height: 1),
+                ),
                 const SizedBox(height: 14),
                 Text(
                   persona.description,
@@ -279,16 +277,9 @@ class _MatchCard extends StatelessWidget {
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: BottleArt.product(p),
-                      ),
+                      child: ClipRRect(borderRadius: BorderRadius.circular(16), child: BottleArt.product(p)),
                     ),
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Pill(rank == 1 ? 'Best match' : '#$rank'),
-                    ),
+                    Positioned(top: 8, left: 8, child: Pill(rank == 1 ? 'Best match' : '#$rank')),
                   ],
                 ),
               ),
@@ -306,7 +297,12 @@ class _MatchCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(p.name, style: AppText.display(20, height: 1.1)),
                     const SizedBox(height: 2),
-                    Text(p.tagline, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.sans(12, color: BrandColors.inkSoft)),
+                    Text(
+                      p.tagline,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.sans(12, color: BrandColors.inkSoft),
+                    ),
                     const SizedBox(height: 10),
                     _MatchMeter(percent: match.percent),
                     const SizedBox(height: 10),
@@ -351,15 +347,17 @@ class _MatchMeter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 30,
-          height: 30,
-          child: CustomPaint(painter: _RingPainter(percent / 100)),
-        ),
+        SizedBox(width: 30, height: 30, child: CustomPaint(painter: _RingPainter(percent / 100))),
         const SizedBox(width: 8),
-        Text('$percent%', style: AppText.display(19, weight: FontWeight.w500, color: BrandColors.gold)),
+        Text(
+          '$percent%',
+          style: AppText.display(19, weight: FontWeight.w500, color: BrandColors.gold),
+        ),
         const SizedBox(width: 5),
-        Text('match', style: AppText.sans(12, weight: FontWeight.w600, color: BrandColors.inkSoft)),
+        Text(
+          'match',
+          style: AppText.sans(12, weight: FontWeight.w600, color: BrandColors.inkSoft),
+        ),
       ],
     );
   }

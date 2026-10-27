@@ -16,7 +16,9 @@ class ShellScreen extends StatelessWidget {
     return Scaffold(
       body: shell,
       bottomNavigationBar: DecoratedBox(
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: BrandColors.line))),
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: BrandColors.line)),
+        ),
         child: ListenableBuilder(
           listenable: cart,
           builder: (context, _) => NavigationBar(
@@ -59,7 +61,10 @@ class ShellScreen extends StatelessWidget {
     isLabelVisible: count > 0,
     backgroundColor: BrandColors.gold,
     textColor: Colors.white,
-    label: Text('$count', style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white)),
+    label: Text(
+      '$count',
+      style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white),
+    ),
     child: Icon(selected ? Icons.shopping_bag_rounded : Icons.shopping_bag_outlined),
   );
 }

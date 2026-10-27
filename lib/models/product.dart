@@ -119,6 +119,5 @@ class Product {
     return ((compare - price) / compare * 100).round();
   }
 
-  static List<String> _split(String raw) =>
-      raw.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
+  static List<String> _split(String raw) => raw.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
 }

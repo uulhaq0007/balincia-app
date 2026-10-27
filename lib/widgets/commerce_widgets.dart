@@ -11,10 +11,13 @@ import 'common.dart';
 
 /// "You're Rs. 710 away from free delivery" with a gold progress bar.
 class FreeShippingMeter extends StatelessWidget {
-  const FreeShippingMeter({super.key, required this.subtotal, this.freeShipCoupon = false});
+  const FreeShippingMeter({super.key, required this.subtotal, this.freeShipCoupon = false, this.compact = false});
 
   final int subtotal;
   final bool freeShipCoupon;
+
+  /// Hides the scale labels under the bar.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +26,28 @@ class FreeShippingMeter extends StatelessWidget {
     final unlocked = remaining == 0 || freeShipCoupon;
     final pct = unlocked ? 1.0 : (subtotal / threshold).clamp(0.0, 1.0);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      padding: EdgeInsets.fromLTRB(16, compact ? 12 : 14, 16, compact ? 13 : 14),
       decoration: BoxDecoration(color: BrandColors.paper2, borderRadius: BorderRadius.circular(18)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(unlocked ? Icons.check_circle_rounded : Icons.local_shipping_outlined, size: 19, color: unlocked ? BrandColors.sage : BrandColors.gold),
+              Icon(
+                unlocked ? Icons.check_circle_rounded : Icons.local_shipping_outlined,
+                size: 19,
+                color: unlocked ? BrandColors.sage : BrandColors.gold,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text.rich(
                   unlocked
                       ? TextSpan(
                           children: [
-                            TextSpan(text: 'Free delivery', style: AppText.sans(13, weight: FontWeight.w800)),
+                            TextSpan(
+                              text: 'Free delivery',
+                              style: AppText.sans(13, weight: FontWeight.w800),
+                            ),
                             TextSpan(
                               text: freeShipCoupon && remaining > 0 ? ' with your code' : ' unlocked — nice!',
                               style: AppText.sans(13, color: BrandColors.inkSoft),
@@ -46,9 +56,18 @@ class FreeShippingMeter extends StatelessWidget {
                         )
                       : TextSpan(
                           children: [
-                            TextSpan(text: "You're ", style: AppText.sans(13, color: BrandColors.inkSoft)),
-                            TextSpan(text: formatPrice(remaining), style: AppText.sans(13, weight: FontWeight.w800)),
-                            TextSpan(text: ' away from free delivery', style: AppText.sans(13, color: BrandColors.inkSoft)),
+                            TextSpan(
+                              text: "You're ",
+                              style: AppText.sans(13, color: BrandColors.inkSoft),
+                            ),
+                            TextSpan(
+                              text: formatPrice(remaining),
+                              style: AppText.sans(13, weight: FontWeight.w800),
+                            ),
+                            TextSpan(
+                              text: ' away from free delivery',
+                              style: AppText.sans(13, color: BrandColors.inkSoft),
+                            ),
                           ],
                         ),
                 ),
@@ -69,14 +88,22 @@ class FreeShippingMeter extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Text(formatPrice(subtotal.clamp(0, threshold)), style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600)),
-              const Spacer(),
-              Text('Free over ${formatPrice(threshold)}', style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600)),
-            ],
-          ),
+          if (!compact) ...[
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Text(
+                  formatPrice(subtotal.clamp(0, threshold)),
+                  style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600),
+                ),
+                const Spacer(),
+                Text(
+                  'Free over ${formatPrice(threshold)}',
+                  style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -96,7 +123,11 @@ class BottleThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
-      child: SizedBox(width: width, height: height, child: BottleArt.product(product, showName: width >= 70)),
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: BottleArt.product(product, showName: width >= 70),
+      ),
     );
   }
 }
@@ -201,14 +232,20 @@ class TotalsBreakdown extends StatelessWidget {
         AmountRow('Subtotal', formatPrice(subtotal)),
         if (savings > 0) AmountRow('Sale savings', '− ${formatPrice(savings)}', accent: BrandColors.sale),
         if (discount > 0)
-          AmountRow('Discount${couponCode == null ? '' : ' ($couponCode)'}', '− ${formatPrice(discount)}', accent: BrandColors.sage),
+          AmountRow(
+            'Discount${couponCode == null ? '' : ' ($couponCode)'}',
+            '− ${formatPrice(discount)}',
+            accent: BrandColors.sage,
+          ),
         if (points > 0) AmountRow('Points redeemed', '− ${formatPrice(points)}', accent: BrandColors.sage),
         AmountRow('Shipping', shipping == 0 ? 'Free' : formatPrice(shipping)),
         const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(child: Text('TOTAL', style: AppText.sans(12, weight: FontWeight.w800, letterSpacing: 1.6))),
+            Expanded(
+              child: Text('TOTAL', style: AppText.sans(12, weight: FontWeight.w800, letterSpacing: 1.6)),
+            ),
             Text(formatPrice(total), style: AppText.display(27, weight: FontWeight.w500)),
           ],
         ),
@@ -216,7 +253,10 @@ class TotalsBreakdown extends StatelessWidget {
           const SizedBox(height: 4),
           Align(
             alignment: Alignment.centerRight,
-            child: Text(pointsNote!, style: AppText.sans(12, weight: FontWeight.w700, color: BrandColors.gold)),
+            child: Text(
+              pointsNote!,
+              style: AppText.sans(12, weight: FontWeight.w700, color: BrandColors.gold),
+            ),
           ),
         ],
       ],
@@ -241,7 +281,10 @@ class StatusPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(99)),
-      child: Text(status.label, style: AppText.sans(11, weight: FontWeight.w800, color: fg)),
+      child: Text(
+        status.label,
+        style: AppText.sans(11, weight: FontWeight.w800, color: fg),
+      ),
     );
   }
 }
@@ -258,7 +301,9 @@ class SectionLabel extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Expanded(child: Text(text.toUpperCase(), style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6))),
+          Expanded(
+            child: Text(text.toUpperCase(), style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6)),
+          ),
           ?trailing,
         ],
       ),

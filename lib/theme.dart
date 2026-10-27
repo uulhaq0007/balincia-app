@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -118,14 +119,20 @@ ThemeData buildTheme() {
   );
 
   final base = ThemeData(useMaterial3: true, colorScheme: scheme);
-  final text = GoogleFonts.manropeTextTheme(base.textTheme).apply(
-    bodyColor: BrandColors.ink,
-    displayColor: BrandColors.ink,
+  TextStyle? manrope(TextStyle? s) => s == null ? null : GoogleFonts.manrope(textStyle: s, color: BrandColors.ink);
+  final t = base.textTheme;
+  final text = t.copyWith(
+    bodyLarge: manrope(t.bodyLarge),
+    bodyMedium: manrope(t.bodyMedium),
+    bodySmall: manrope(t.bodySmall),
+    labelLarge: manrope(t.labelLarge),
+    labelMedium: manrope(t.labelMedium),
+    labelSmall: manrope(t.labelSmall),
+    titleMedium: manrope(t.titleMedium),
+    titleSmall: manrope(t.titleSmall),
   );
 
-  final pill = WidgetStatePropertyAll<OutlinedBorder>(
-    RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-  );
+  final pill = WidgetStatePropertyAll<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)));
 
   return base.copyWith(
     scaffoldBackgroundColor: BrandColors.paper,
@@ -166,10 +173,8 @@ ThemeData buildTheme() {
         ),
       ),
       iconTheme: WidgetStateProperty.resolveWith(
-        (states) => IconThemeData(
-          size: 23,
-          color: states.contains(WidgetState.selected) ? BrandColors.ink : BrandColors.muted,
-        ),
+        (states) =>
+            IconThemeData(size: 23, color: states.contains(WidgetState.selected) ? BrandColors.ink : BrandColors.muted),
       ),
     ),
     filledButtonTheme: FilledButtonThemeData(
@@ -203,8 +208,8 @@ ThemeData buildTheme() {
         shape: pill,
       ),
     ),
-    iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(foregroundColor: const WidgetStatePropertyAll(BrandColors.ink)),
+    iconButtonTheme: const IconButtonThemeData(
+      style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(BrandColors.ink)),
     ),
     chipTheme: ChipThemeData(
       backgroundColor: BrandColors.card,

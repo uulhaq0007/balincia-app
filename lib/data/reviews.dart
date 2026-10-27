@@ -24,15 +24,47 @@ const _reviewers = [
 ];
 
 const _pool = [
-  (5, 'My new signature', 'Lasts all day even in this heat. I get compliments every single time I wear it to the office.'),
-  (5, 'Smells way more expensive', 'Honestly comparable to designer bottles three times the price. The drydown is gorgeous.'),
-  (4, 'Beautiful, slightly soft', 'Gorgeous scent and lovely packaging. Projection is a little softer than I expected but longevity is great.'),
-  (5, 'Gifted it, now buying for myself', 'Bought this as a gift for my husband and ended up stealing it. Delivery to Lahore took just two days.'),
-  (5, 'Perfect for weddings', 'Wore it to a mehndi and three people asked what I was wearing. Will definitely reorder.'),
+  (
+    5,
+    'My new signature',
+    'Lasts all day even in this heat. I get compliments every single time I wear it to the office.',
+  ),
+  (
+    5,
+    'Smells way more expensive',
+    'Honestly comparable to designer bottles three times the price. The drydown is gorgeous.',
+  ),
+  (
+    4,
+    'Beautiful, slightly soft',
+    'Gorgeous scent and lovely packaging. Projection is a little softer than I expected but longevity is great.',
+  ),
+  (
+    5,
+    'Gifted it, now buying for myself',
+    'Bought this as a gift for my husband and ended up stealing it. Delivery to Lahore took just two days.',
+  ),
+  (
+    5,
+    'Perfect for weddings',
+    'Wore it to a mehndi and three people asked what I was wearing. Will definitely reorder.',
+  ),
   (4, 'Great value', 'Very good quality for the price. The bottle feels premium and the cap is nice and heavy.'),
-  (5, 'Obsessed', "The opening is lovely but the drydown after an hour is where it really shines. Still on my scarf the next morning."),
-  (3, 'Nice but not for me', 'Well made and long lasting, just a bit too sweet for my taste. My sister loves it though.'),
-  (5, 'Fast delivery, sealed packaging', 'Arrived in Islamabad within 48 hours, perfectly packed. COD made it super easy.'),
+  (
+    5,
+    'Obsessed',
+    "The opening is lovely but the drydown after an hour is where it really shines. Still on my scarf the next morning.",
+  ),
+  (
+    3,
+    'Nice but not for me',
+    'Well made and long lasting, just a bit too sweet for my taste. My sister loves it though.',
+  ),
+  (
+    5,
+    'Fast delivery, sealed packaging',
+    'Arrived in Islamabad within 48 hours, perfectly packed. COD made it super easy.',
+  ),
   (4, 'Lovely everyday scent', 'Easy to wear, not overpowering. Good for office and university.'),
 ];
 

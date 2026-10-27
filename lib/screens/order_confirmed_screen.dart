@@ -34,104 +34,107 @@ class OrderConfirmedScreen extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           actions: [
-            IconButton(
-              tooltip: 'Close',
-              onPressed: () => context.go('/'),
-              icon: const Icon(Icons.close_rounded),
-            ),
+            IconButton(tooltip: 'Close', onPressed: () => context.go('/'), icon: const Icon(Icons.close_rounded)),
             const SizedBox(width: 6),
           ],
         ),
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
-          children: [
-            const Center(child: _Seal()),
-            const SizedBox(height: 20),
-            Center(child: Eyebrow('Thank you, ${account.customer.firstName}')),
-            const SizedBox(height: 10),
-            const EditorialText('Your order is *confirmed*', size: 34, textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            Text(
-              'Order ${order.number} · placed ${formatDateTime(order.placedAt)}',
-              textAlign: TextAlign.center,
-              style: AppText.sans(13.5, color: BrandColors.inkSoft),
-            ),
-            const SizedBox(height: 24),
-            PaperCard(
-              child: Column(
-                children: [
-                  _InfoRow(
-                    icon: Icons.event_available_outlined,
-                    label: 'Arriving',
-                    value: '${formatShortDate(from)} – ${formatShortDate(to)}',
-                    note: fast ? 'Express · 24–48 hrs' : 'Standard · 2–4 working days',
-                  ),
-                  const Divider(height: 26),
-                  _InfoRow(
-                    icon: Icons.place_outlined,
-                    label: 'Deliver to',
-                    value: order.address.fullName,
-                    note: order.address.singleLine,
-                  ),
-                  const Divider(height: 26),
-                  _InfoRow(
-                    icon: Icons.payments_outlined,
-                    label: 'Payment',
-                    value: order.payment.label,
-                    note: order.payment == PaymentMethod.cod
-                        ? 'Please keep ${formatPrice(order.total)} ready'
-                        : order.payment.description,
-                  ),
-                ],
+        body: SafeArea(
+          top: false,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+            children: [
+              const Center(child: _Seal()),
+              const SizedBox(height: 20),
+              Center(child: Eyebrow('Thank you, ${account.customer.firstName}')),
+              const SizedBox(height: 10),
+              const EditorialText('Your order is *confirmed*', size: 34, textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              Text(
+                'Order ${order.number} · placed ${formatDateTime(order.placedAt)}',
+                textAlign: TextAlign.center,
+                style: AppText.sans(13.5, color: BrandColors.inkSoft),
               ),
-            ),
-            const SizedBox(height: 14),
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                gradient: const LinearGradient(colors: [BrandColors.oud, Color(0xff3d2817)]),
-              ),
-              child: Row(
-                children: [
-                  Text('+${order.pointsEarned}', style: AppText.display(34, color: BrandColors.gold2, weight: FontWeight.w500)),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      'Balincia Points will be added to your account once this order is delivered.',
-                      style: AppText.sans(13, color: BrandColors.paper.withValues(alpha: 0.85), height: 1.45),
+              const SizedBox(height: 24),
+              PaperCard(
+                child: Column(
+                  children: [
+                    _InfoRow(
+                      icon: Icons.event_available_outlined,
+                      label: 'Arriving',
+                      value: '${formatShortDate(from)} – ${formatShortDate(to)}',
+                      note: fast ? 'Express · 24–48 hrs' : 'Standard · 2–4 working days',
                     ),
-                  ),
-                ],
+                    const Divider(height: 26),
+                    _InfoRow(
+                      icon: Icons.place_outlined,
+                      label: 'Deliver to',
+                      value: order.address.fullName,
+                      note: order.address.singleLine,
+                    ),
+                    const Divider(height: 26),
+                    _InfoRow(
+                      icon: Icons.payments_outlined,
+                      label: 'Payment',
+                      value: order.payment.label,
+                      note: order.payment == PaymentMethod.cod
+                          ? 'Please keep ${formatPrice(order.total)} ready'
+                          : order.payment.description,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            PaperCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SectionLabel('${pluralize(order.itemCount, 'item')} in this order'),
-                  for (final l in order.lines) OrderLineTile(product: l.product, variant: l.variant, quantity: l.quantity),
-                  const SizedBox(height: 10),
-                  TotalsBreakdown(
-                    subtotal: order.subtotal,
-                    discount: order.discount,
-                    points: order.pointsRedeemed,
-                    shipping: order.shipping,
-                    total: order.total,
-                    couponCode: order.couponCode,
-                  ),
-                ],
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  gradient: const LinearGradient(colors: [BrandColors.oud, Color(0xff3d2817)]),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      '+${order.pointsEarned}',
+                      style: AppText.display(34, color: BrandColors.gold2, weight: FontWeight.w500),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        'Balincia Points will be added to your account once this order is delivered.',
+                        style: AppText.sans(13, color: BrandColors.paper.withValues(alpha: 0.85), height: 1.45),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 22),
-            FilledButton(
-              onPressed: () => context.push('/orders/${order.number}'),
-              child: const Text('TRACK THIS ORDER'),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton(onPressed: () => context.go('/'), child: const Text('CONTINUE SHOPPING')),
-          ],
+              const SizedBox(height: 14),
+              PaperCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SectionLabel('${pluralize(order.itemCount, 'item')} in this order'),
+                    for (final l in order.lines)
+                      OrderLineTile(product: l.product, variant: l.variant, quantity: l.quantity),
+                    const SizedBox(height: 10),
+                    TotalsBreakdown(
+                      subtotal: order.subtotal,
+                      discount: order.discount,
+                      points: order.pointsRedeemed,
+                      shipping: order.shipping,
+                      total: order.total,
+                      couponCode: order.couponCode,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 22),
+              FilledButton(
+                onPressed: () => context.push('/orders/${order.number}'),
+                child: const Text('TRACK THIS ORDER'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton(onPressed: () => context.go('/'), child: const Text('CONTINUE SHOPPING')),
+            ],
+          ),
         ),
       ),
     );

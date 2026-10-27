@@ -1,8 +1,6 @@
 // Port of the web store's src/lib/quiz.ts: questions, personas and the
 // server-side scoring used to rank the catalogue.
 
-import 'package:flutter/painting.dart';
-
 import '../models/product.dart';
 import 'products.dart';
 import 'reviews.dart';
@@ -107,8 +105,7 @@ const QuizAnswers kDemoAnswers = {
   'intensity': '5',
 };
 
-bool isComplete(QuizAnswers a) =>
-    kQuiz.every((q) => q.options.any((o) => o.value == a[q.key]));
+bool isComplete(QuizAnswers a) => kQuiz.every((q) => q.options.any((o) => o.value == a[q.key]));
 
 QuizAnswers answersFromQuery(Map<String, String> qp) => {
   for (final q in kQuiz)
@@ -153,9 +150,7 @@ Iterable<Product> get quizCandidates =>
 /// Ranks candidates the way the quiz page does (score, then rating), top [take].
 List<QuizMatch> rankMatches(QuizAnswers a, {int take = 4}) {
   final best = maxScore(a);
-  final ranked = quizCandidates
-      .map((p) => (p, scoreProduct(p, a)))
-      .toList()
+  final ranked = quizCandidates.map((p) => (p, scoreProduct(p, a))).toList()
     ..sort((x, y) {
       final s = y.$2.compareTo(x.$2);
       return s != 0 ? s : ratingOf(y.$1).compareTo(ratingOf(x.$1));

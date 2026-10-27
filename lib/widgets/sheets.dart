@@ -86,7 +86,10 @@ Future<void> showConciergeSheet(BuildContext context) {
                 backgroundColor: BrandColors.paper2,
                 child: Icon(icon, color: BrandColors.gold, size: 20),
               ),
-              title: Text(label, style: AppText.sans(12, color: BrandColors.muted, weight: FontWeight.w700)),
+              title: Text(
+                label,
+                style: AppText.sans(12, color: BrandColors.muted, weight: FontWeight.w700),
+              ),
               subtitle: Text(value, style: AppText.sans(15, weight: FontWeight.w700)),
               trailing: TextButton.icon(
                 onPressed: () => _copy(context, label == 'Email' ? 'Email address' : 'Number', value),

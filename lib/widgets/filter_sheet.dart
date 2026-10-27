@@ -17,14 +17,30 @@ Future<CatalogFilters?> showFilterSheet(
     isScrollControlled: true,
     useRootNavigator: true,
     useSafeArea: true,
-    barrierColor: BrandColors.ink.withValues(alpha: 0.45),
-    builder: (context) => FilterSheet(initial: initial, base: base, hide: hide),
+    barrierColor: BrandColors.ink.withValues(alpha: 0.38),
+    builder: (context) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.94,
+      snap: true,
+      snapSizes: const [0.6],
+      builder: (context, controller) =>
+          FilterSheet(initial: initial, base: base, hide: hide, scrollController: controller),
+    ),
   );
 }
 
 class FilterSheet extends StatefulWidget {
-  const FilterSheet({super.key, required this.initial, required this.base, this.hide = const {}});
+  const FilterSheet({
+    super.key,
+    required this.initial,
+    required this.base,
+    this.hide = const {},
+    this.scrollController,
+  });
 
+  final ScrollController? scrollController;
   final CatalogFilters initial;
 
   /// The products being filtered (the whole library, or one collection).
@@ -56,10 +72,9 @@ class _FilterSheetState extends State<FilterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.sizeOf(context).height;
     final count = _count;
     return SizedBox(
-      height: height * 0.82,
+      width: double.infinity,
       child: Column(
         children: [
           const SizedBox(height: 10),
@@ -108,6 +123,7 @@ class _FilterSheetState extends State<FilterSheet> {
           const Divider(),
           Expanded(
             child: ListView(
+              controller: widget.scrollController,
               padding: const EdgeInsets.fromLTRB(22, 4, 22, 20),
               children: [
                 for (final g in _groups)
@@ -195,7 +211,10 @@ class _FilterSheetState extends State<FilterSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('ON SALE ONLY', style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6)),
+                            Text(
+                              'ON SALE ONLY',
+                              style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6),
+                            ),
                             const SizedBox(height: 2),
                             Text('Limited-time prices', style: AppText.sans(12.5, color: BrandColors.muted)),
                           ],
@@ -224,7 +243,11 @@ class _FilterSheetState extends State<FilterSheet> {
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: count == 0 ? null : () => Navigator.of(context).pop(_draft),
-                    child: Text(count == 0 ? 'NO MATCHES — TRY FEWER FILTERS' : 'SHOW $count ${count == 1 ? 'RESULT' : 'RESULTS'}'),
+                    child: Text(
+                      count == 0
+                          ? 'NO MATCHES — TRY FEWER FILTERS'
+                          : 'SHOW $count ${count == 1 ? 'RESULT' : 'RESULTS'}',
+                    ),
                   ),
                 ),
               ),
@@ -247,7 +270,9 @@ class _Section extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: BrandColors.line))),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: BrandColors.line)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -256,7 +281,10 @@ class _Section extends StatelessWidget {
               Text(title.toUpperCase(), style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6)),
               const Spacer(),
               if (trailing != null)
-                Text(trailing!, style: AppText.sans(12, weight: FontWeight.w600, color: BrandColors.gold)),
+                Text(
+                  trailing!,
+                  style: AppText.sans(12, weight: FontWeight.w600, color: BrandColors.gold),
+                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -305,7 +333,10 @@ class ToggleChip extends StatelessWidget {
                   Icon(icon, size: 14, color: BrandColors.muted),
                   const SizedBox(width: 5),
                 ],
-                Text(label, style: AppText.sans(13, weight: FontWeight.w600, color: fg, height: 1.2)),
+                Text(
+                  label,
+                  style: AppText.sans(13, weight: FontWeight.w600, color: fg, height: 1.2),
+                ),
               ],
             ),
           ),

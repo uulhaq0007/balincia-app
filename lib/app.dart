@@ -43,7 +43,10 @@ class _BalinciaAppState extends State<BalinciaApp> {
           if (!shotMode) return child!;
           const pad = EdgeInsets.only(top: 47, bottom: 34);
           final mq = MediaQuery.of(context);
-          return MediaQuery(data: mq.copyWith(padding: pad, viewPadding: pad), child: child!);
+          return MediaQuery(
+            data: mq.copyWith(padding: pad, viewPadding: pad),
+            child: child!,
+          );
         },
       ),
     );

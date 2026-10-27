@@ -32,10 +32,7 @@ class ProductCard extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: BottleArt.product(p),
-                ),
+                child: ClipRRect(borderRadius: BorderRadius.circular(18), child: BottleArt.product(p)),
               ),
               Positioned.fill(
                 child: Material(
@@ -163,7 +160,10 @@ class ProductRail extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: products.length,
         separatorBuilder: (_, _) => const SizedBox(width: 14),
-        itemBuilder: (context, i) => SizedBox(width: cardWidth, child: ProductCard(product: products[i])),
+        itemBuilder: (context, i) => SizedBox(
+          width: cardWidth,
+          child: ProductCard(product: products[i]),
+        ),
       ),
     );
   }
@@ -171,7 +171,11 @@ class ProductRail extends StatelessWidget {
 
 /// Two-column sliver grid of product cards.
 class ProductSliverGrid extends StatelessWidget {
-  const ProductSliverGrid({super.key, required this.products, this.padding = const EdgeInsets.symmetric(horizontal: 16)});
+  const ProductSliverGrid({
+    super.key,
+    required this.products,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+  });
 
   final List<Product> products;
   final EdgeInsets padding;

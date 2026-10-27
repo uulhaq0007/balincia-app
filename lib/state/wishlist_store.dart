@@ -11,10 +11,7 @@ class WishlistStore extends ChangeNotifier {
   bool contains(Product p) => _slugs.contains(p.slug);
   int get count => _slugs.length;
 
-  List<Product> get products => [
-    for (final slug in _slugs)
-      if (productBySlug(slug) case final p?) p,
-  ];
+  List<Product> get products => [for (final slug in _slugs) ?productBySlug(slug)];
 
   /// Returns true when the product is now saved.
   bool toggle(Product p) {

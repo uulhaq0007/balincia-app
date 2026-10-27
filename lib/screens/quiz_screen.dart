@@ -107,10 +107,10 @@ class _QuizScreenState extends State<QuizScreen> {
                       padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
                       children: [
                         Text(q.question, style: AppText.display(29, height: 1.12)),
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 14),
                         for (final o in q.options)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 8),
                             child: _OptionCard(
                               option: o,
                               selected: selected == o.value,
@@ -123,7 +123,9 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 12),
-                  decoration: const BoxDecoration(border: Border(top: BorderSide(color: BrandColors.line))),
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: BrandColors.line)),
+                  ),
                   child: Row(
                     children: [
                       if (quiz.step > 0)
@@ -132,7 +134,10 @@ class _QuizScreenState extends State<QuizScreen> {
                           child: SizedBox(
                             width: 52,
                             child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(padding: EdgeInsets.zero, side: const BorderSide(color: BrandColors.line)),
+                              style: OutlinedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                side: const BorderSide(color: BrandColors.line),
+                              ),
                               onPressed: quiz.back,
                               child: const Icon(Icons.arrow_back_rounded, size: 20),
                             ),
@@ -170,43 +175,56 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 104,
-      child: Stack(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 12, 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Positioned(
-            right: 54,
-            top: 14,
-            width: 58,
-            height: 84,
-            child: Transform.rotate(
-              angle: -0.2,
-              child: const BottleArt(dark: Color(0xff5a1a2c), light: Color(0xffe9a3b5), shape: BottleShape.round, bare: true),
-            ),
-          ),
-          Positioned(
-            right: 12,
-            top: 6,
-            width: 60,
-            height: 92,
-            child: Transform.rotate(
-              angle: 0.16,
-              child: BottleArt(
-                dark: accent == null ? const Color(0xff2b2118) : Color.lerp(accent, Colors.black, 0.6)!,
-                light: accent ?? const Color(0xffc9a27a),
-                shape: BottleShape.tall,
-                bare: true,
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 130, 0),
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Eyebrow('The scent quiz'),
                 SizedBox(height: 8),
-                EditorialText('Find your *signature*', size: 32),
+                EditorialText('Find your *signature*', size: 32, height: 1.05),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 112,
+            height: 96,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  bottom: 0,
+                  width: 58,
+                  height: 80,
+                  child: Transform.rotate(
+                    angle: -0.2,
+                    child: const BottleArt(
+                      dark: Color(0xff5a1a2c),
+                      light: Color(0xffe9a3b5),
+                      shape: BottleShape.round,
+                      bare: true,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 2,
+                  width: 60,
+                  height: 94,
+                  child: Transform.rotate(
+                    angle: 0.16,
+                    child: BottleArt(
+                      dark: accent == null ? const Color(0xff2b2118) : Color.lerp(accent, Colors.black, 0.6)!,
+                      light: accent ?? const Color(0xffc9a27a),
+                      shape: BottleShape.tall,
+                      bare: true,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -333,7 +351,13 @@ class _OptionCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(22),
               border: Border.all(color: selected ? BrandColors.ink : BrandColors.line),
               boxShadow: selected
-                  ? [BoxShadow(color: BrandColors.ink.withValues(alpha: 0.18), blurRadius: 18, offset: const Offset(0, 8))]
+                  ? [
+                      BoxShadow(
+                        color: BrandColors.ink.withValues(alpha: 0.18),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ]
                   : const [],
             ),
             child: Stack(
@@ -348,13 +372,16 @@ class _OptionCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
-                          colors: [swatch.withValues(alpha: selected ? 0.55 : 0.4), swatch.withValues(alpha: 0)],
+                          colors: [
+                            swatch.withValues(alpha: selected ? 0.55 : 0.4),
+                            swatch.withValues(alpha: 0),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 16, 14),
+                  padding: const EdgeInsets.fromLTRB(14, 12, 16, 12),
                   child: Row(
                     children: [
                       Container(
@@ -366,7 +393,11 @@ class _OptionCard extends StatelessWidget {
                         ),
                         child: swatch != null
                             ? null
-                            : Icon(_optionIcons[option.value], size: 21, color: selected ? BrandColors.gold2 : BrandColors.gold),
+                            : Icon(
+                                _optionIcons[option.value],
+                                size: 21,
+                                color: selected ? BrandColors.gold2 : BrandColors.gold,
+                              ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -377,7 +408,10 @@ class _OptionCard extends StatelessWidget {
                             const SizedBox(height: 2),
                             Text(
                               option.hint,
-                              style: AppText.sans(13, color: selected ? BrandColors.paper.withValues(alpha: 0.7) : BrandColors.inkSoft),
+                              style: AppText.sans(
+                                13,
+                                color: selected ? BrandColors.paper.withValues(alpha: 0.7) : BrandColors.inkSoft,
+                              ),
                             ),
                           ],
                         ),

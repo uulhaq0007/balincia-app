@@ -67,10 +67,13 @@ class _ProductScreenState extends State<ProductScreen> {
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 404,
+            expandedHeight: 372,
             backgroundColor: BrandColors.paper,
             automaticallyImplyLeading: false,
-            leading: const Padding(padding: EdgeInsets.all(8), child: BackOrHomeButton(glass: true, fallback: '/shop')),
+            leading: const Padding(
+              padding: EdgeInsets.all(8),
+              child: BackOrHomeButton(glass: true, fallback: '/shop'),
+            ),
             leadingWidth: 60,
             actions: [
               WishlistButton(product: p, size: 40),
@@ -91,12 +94,15 @@ class _ProductScreenState extends State<ProductScreen> {
             flexibleSpace: LayoutBuilder(
               builder: (context, c) {
                 final min = kToolbarHeight + 24 + topInset;
-                final max = 404 + topInset;
+                final max = 372 + topInset;
                 final t = ((c.maxHeight - min) / (max - min)).clamp(0.0, 1.0);
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    Opacity(opacity: t, child: _HeroArt(product: p, topInset: topInset)),
+                    Opacity(
+                      opacity: t,
+                      child: _HeroArt(product: p, topInset: topInset),
+                    ),
                     IgnorePointer(
                       child: Opacity(
                         opacity: 1 - t,
@@ -113,13 +119,15 @@ class _ProductScreenState extends State<ProductScreen> {
               },
             ),
           ),
-          SliverToBoxAdapter(child: _Summary(product: p, variant: _variant, onVariant: (v) => setState(() => _variant = v))),
+          SliverToBoxAdapter(
+            child: _Summary(product: p, variant: _variant, onVariant: (v) => setState(() => _variant = v)),
+          ),
           SliverToBoxAdapter(child: _Story(product: p)),
           SliverToBoxAdapter(child: _Pyramid(product: p)),
           SliverToBoxAdapter(child: _Performance(product: p)),
           SliverToBoxAdapter(child: _Reviews(product: p)),
           const SliverToBoxAdapter(child: SizedBox(height: 34)),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: SectionHeading(eyebrow: 'You may also like', title: 'From the *same family*'),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -149,12 +157,11 @@ class _GlassBag extends StatelessWidget {
         isLabelVisible: cart.count > 0,
         backgroundColor: BrandColors.gold,
         offset: const Offset(-2, 2),
-        label: Text('${cart.count}', style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white)),
-        child: GlassIconButton(
-          icon: Icons.shopping_bag_outlined,
-          tooltip: 'Bag',
-          onPressed: () => context.go('/bag'),
+        label: Text(
+          '${cart.count}',
+          style: AppText.sans(9.5, weight: FontWeight.w800, color: Colors.white),
         ),
+        child: GlassIconButton(icon: Icons.shopping_bag_outlined, tooltip: 'Bag', onPressed: () => context.go('/bag')),
       ),
     );
   }
@@ -222,7 +229,9 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = product;
     final rating = ratingOf(p);
-    final off = variant.onSale ? ((variant.compareAtPrice! - variant.price) / variant.compareAtPrice! * 100).round() : 0;
+    final off = variant.onSale
+        ? ((variant.compareAtPrice! - variant.price) / variant.compareAtPrice! * 100).round()
+        : 0;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 2, 20, 0),
@@ -233,7 +242,10 @@ class _Summary extends StatelessWidget {
           const SizedBox(height: 8),
           Text(p.name, style: AppText.display(36, height: 1.04)),
           const SizedBox(height: 6),
-          Text(p.tagline, style: AppText.display(16.5, italic: true, color: BrandColors.inkSoft, weight: FontWeight.w300)),
+          Text(
+            p.tagline,
+            style: AppText.display(16.5, italic: true, color: BrandColors.inkSoft, weight: FontWeight.w300),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -250,12 +262,22 @@ class _Summary extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(formatPrice(variant.price), style: AppText.display(28, weight: FontWeight.w500, color: variant.onSale ? BrandColors.sale : BrandColors.ink)),
+              Text(
+                formatPrice(variant.price),
+                style: AppText.display(
+                  28,
+                  weight: FontWeight.w500,
+                  color: variant.onSale ? BrandColors.sale : BrandColors.ink,
+                ),
+              ),
               if (variant.onSale) ...[
                 const SizedBox(width: 10),
                 Text(
                   formatPrice(variant.compareAtPrice!),
-                  style: AppText.sans(15, color: BrandColors.muted).copyWith(decoration: TextDecoration.lineThrough, decorationColor: BrandColors.muted),
+                  style: AppText.sans(
+                    15,
+                    color: BrandColors.muted,
+                  ).copyWith(decoration: TextDecoration.lineThrough, decorationColor: BrandColors.muted),
                 ),
                 const SizedBox(width: 10),
                 Pill('−$off%', background: BrandColors.sale, foreground: Colors.white),
@@ -271,8 +293,14 @@ class _Summary extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: 'SIZE — ', style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6, color: BrandColors.inkSoft)),
-                TextSpan(text: variant.label.toUpperCase(), style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6)),
+                TextSpan(
+                  text: 'SIZE — ',
+                  style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6, color: BrandColors.inkSoft),
+                ),
+                TextSpan(
+                  text: variant.label.toUpperCase(),
+                  style: AppText.sans(11.5, weight: FontWeight.w800, letterSpacing: 1.6),
+                ),
               ],
             ),
           ),
@@ -288,9 +316,16 @@ class _Summary extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              Container(width: 7, height: 7, decoration: const BoxDecoration(color: BrandColors.sage, shape: BoxShape.circle)),
+              Container(
+                width: 7,
+                height: 7,
+                decoration: const BoxDecoration(color: BrandColors.sage, shape: BoxShape.circle),
+              ),
               const SizedBox(width: 8),
-              Text('In stock, ready to ship', style: AppText.sans(12.5, color: BrandColors.inkSoft, weight: FontWeight.w600)),
+              Text(
+                'In stock, ready to ship',
+                style: AppText.sans(12.5, color: BrandColors.inkSoft, weight: FontWeight.w600),
+              ),
             ],
           ),
           const SizedBox(height: 18),
@@ -326,11 +361,18 @@ class _VariantCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(variant.label, style: AppText.sans(14.5, weight: FontWeight.w800, color: fg)),
+              Text(
+                variant.label,
+                style: AppText.sans(14.5, weight: FontWeight.w800, color: fg),
+              ),
               const SizedBox(height: 1),
               Text(
                 formatPrice(variant.price),
-                style: AppText.sans(12, weight: FontWeight.w500, color: selected ? BrandColors.paper.withValues(alpha: 0.7) : BrandColors.muted),
+                style: AppText.sans(
+                  12,
+                  weight: FontWeight.w500,
+                  color: selected ? BrandColors.paper.withValues(alpha: 0.7) : BrandColors.muted,
+                ),
               ),
             ],
           ),
@@ -425,7 +467,10 @@ class _Story extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(facts[r * 2 + c].$1.toUpperCase(), style: AppText.eyebrow(color: BrandColors.muted, size: 9)),
+                                  Text(
+                                    facts[r * 2 + c].$1.toUpperCase(),
+                                    style: AppText.eyebrow(color: BrandColors.muted, size: 9),
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(facts[r * 2 + c].$2, style: AppText.sans(13.5, weight: FontWeight.w700)),
                                 ],
@@ -486,7 +531,10 @@ class _Pyramid extends StatelessWidget {
                       Text(
                         notes.join(' · '),
                         textAlign: TextAlign.center,
-                        style: AppText.display(17, color: Color.alphaBlend(p.dark.withValues(alpha: 0.85), BrandColors.ink)),
+                        style: AppText.display(
+                          17,
+                          color: Color.alphaBlend(p.dark.withValues(alpha: 0.85), BrandColors.ink),
+                        ),
                       ),
                       const SizedBox(height: 3),
                       Text(sub, style: AppText.sans(10.5, color: p.dark.withValues(alpha: 0.6))),
@@ -528,7 +576,9 @@ class _Performance extends StatelessWidget {
               children: [
                 for (var i = 0; i < kSeasons.length; i++) ...[
                   if (i > 0) const SizedBox(width: 8),
-                  Expanded(child: _SeasonTile(option: kSeasons[i], on: p.seasons.contains(kSeasons[i].value))),
+                  Expanded(
+                    child: _SeasonTile(option: kSeasons[i], on: p.seasons.contains(kSeasons[i].value)),
+                  ),
                 ],
               ],
             ),
@@ -538,15 +588,16 @@ class _Performance extends StatelessWidget {
             Wrap(
               spacing: 7,
               runSpacing: 7,
-              children: [
-                for (final o in kOccasions) _OccasionChip(option: o, on: p.occasions.contains(o.value)),
-              ],
+              children: [for (final o in kOccasions) _OccasionChip(option: o, on: p.occasions.contains(o.value))],
             ),
             const SizedBox(height: 18),
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'Olfactive family: ', style: AppText.sans(13, weight: FontWeight.w700)),
+                  TextSpan(
+                    text: 'Olfactive family: ',
+                    style: AppText.sans(13, weight: FontWeight.w700),
+                  ),
                   TextSpan(
                     text: p.families.map((f) => labelFor(kFamilies, f)).join(', '),
                     style: AppText.sans(13, color: BrandColors.inkSoft),
@@ -622,7 +673,10 @@ class _SeasonTile extends StatelessWidget {
         children: [
           Icon(kSeasonIcons[option.value], size: 19, color: fg),
           const SizedBox(height: 4),
-          Text(option.label, style: AppText.sans(11.5, weight: FontWeight.w600, color: fg)),
+          Text(
+            option.label,
+            style: AppText.sans(11.5, weight: FontWeight.w600, color: fg),
+          ),
         ],
       ),
     );
@@ -650,7 +704,10 @@ class _OccasionChip extends StatelessWidget {
         children: [
           Icon(kOccasionIcons[option.value], size: 14, color: fg),
           const SizedBox(width: 5),
-          Text(option.label, style: AppText.sans(12, weight: FontWeight.w600, color: fg)),
+          Text(
+            option.label,
+            style: AppText.sans(12, weight: FontWeight.w600, color: fg),
+          ),
         ],
       ),
     );
@@ -696,7 +753,10 @@ class _ReviewsState extends State<_Reviews> {
                 children: [
                   Stars(rating: rating, size: 16),
                   const SizedBox(height: 3),
-                  Text('Based on ${pluralize(reviews.length, 'review')}', style: AppText.sans(12, color: BrandColors.muted)),
+                  Text(
+                    'Based on ${pluralize(reviews.length, 'review')}',
+                    style: AppText.sans(12, color: BrandColors.muted),
+                  ),
                 ],
               ),
               const SizedBox(width: 18),
@@ -708,14 +768,14 @@ class _ReviewsState extends State<_Reviews> {
                         padding: const EdgeInsets.symmetric(vertical: 1.5),
                         child: Row(
                           children: [
-                            SizedBox(width: 18, child: Text('${e.key}★', style: AppText.sans(10, color: BrandColors.inkSoft))),
+                            SizedBox(
+                              width: 18,
+                              child: Text('${e.key}★', style: AppText.sans(10, color: BrandColors.inkSoft)),
+                            ),
                             Expanded(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(9),
-                                child: LinearProgressIndicator(
-                                  value: e.value / reviews.length,
-                                  minHeight: 5,
-                                ),
+                                child: LinearProgressIndicator(value: e.value / reviews.length, minHeight: 5),
                               ),
                             ),
                           ],
@@ -751,7 +811,9 @@ class _ReviewTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: BrandColors.line))),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: BrandColors.line)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -773,7 +835,10 @@ class _ReviewTile extends StatelessWidget {
               const SizedBox(width: 8),
               const Icon(Icons.verified_rounded, size: 13, color: BrandColors.sage),
               const SizedBox(width: 3),
-              Text('Verified buyer', style: AppText.sans(11, color: BrandColors.sage, weight: FontWeight.w600)),
+              Text(
+                'Verified buyer',
+                style: AppText.sans(11, color: BrandColors.sage, weight: FontWeight.w600),
+              ),
             ],
           ),
         ],
@@ -796,7 +861,9 @@ class _PurchaseBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xfffbf8f3),
         border: const Border(top: BorderSide(color: BrandColors.line)),
-        boxShadow: [BoxShadow(color: BrandColors.ink.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -6))],
+        boxShadow: [
+          BoxShadow(color: BrandColors.ink.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -6)),
+        ],
       ),
       child: SafeArea(
         top: false,
