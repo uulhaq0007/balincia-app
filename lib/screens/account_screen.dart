@@ -262,10 +262,13 @@ class _LoyaltyCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            next == null
-                ? 'You’ve reached Noir — ${tier.perk.toLowerCase()}.'
-                : '${formatPrice(next.min - account.lifetimeSpend)} to ${next.name} · ${next.perk}',
-            style: AppText.sans(12, color: BrandColors.paper.withValues(alpha: 0.75), height: 1.4),
+            next == null ? 'You’ve reached Noir' : '${formatPrice(next.min - account.lifetimeSpend)} to ${next.name}',
+            style: AppText.sans(12.5, weight: FontWeight.w700, color: BrandColors.paper),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            next == null ? tier.perk : 'Unlocks ${next.perk.toLowerCase()}',
+            style: AppText.sans(12, color: BrandColors.paper.withValues(alpha: 0.65), height: 1.4),
           ),
         ],
       ),
