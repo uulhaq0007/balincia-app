@@ -56,25 +56,34 @@ class BagScreen extends StatelessWidget {
                   ),
                 )
               : ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                  padding: const EdgeInsets.fromLTRB(16, 2, 16, 24),
                   children: [
-                    FreeShippingMeter(
-                      compact: true,
-                      subtotal: cart.subtotal,
-                      freeShipCoupon: cart.coupon?.type == CouponType.freeShip,
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: BrandColors.card,
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: BrandColors.line.withValues(alpha: 0.8)),
+                      ),
+                      child: Column(
+                        children: [
+                          for (final (i, item) in cart.items.indexed) ...[
+                            if (i > 0) const Divider(indent: 14, endIndent: 14),
+                            _BagItem(item: item, cart: cart),
+                          ],
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 6),
-                    for (final item in cart.items) _BagItem(item: item, cart: cart),
-                    const SizedBox(height: 8),
-                    _PointsCard(cart: cart, balance: account.points),
                     const SizedBox(height: 10),
                     PaperCard(
-                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 18),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _DiscountCode(cart: cart),
-                          const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider()),
+                          const SizedBox(height: 8),
+                          _PointsCard(cart: cart, balance: account.points),
+                          const SizedBox(height: 12),
                           TotalsBreakdown(
                             subtotal: totals.subtotal,
                             discount: totals.discount,
@@ -83,6 +92,10 @@ class BagScreen extends StatelessWidget {
                             total: totals.total,
                             couponCode: cart.coupon?.code,
                             pointsNote: "You'll earn ${cart.pointsToEarn} points on delivery",
+                            afterShipping: ShippingMeterLine(
+                              subtotal: cart.subtotal,
+                              freeShipCoupon: cart.coupon?.type == CouponType.freeShip,
+                            ),
                           ),
                         ],
                       ),
@@ -131,29 +144,23 @@ class _BagItem extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 24),
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        decoration: BoxDecoration(color: BrandColors.sale, borderRadius: BorderRadius.circular(20)),
+        color: BrandColors.sale,
         child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: BrandColors.card,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: BrandColors.line.withValues(alpha: 0.8)),
-        ),
+        color: BrandColors.card,
+        padding: const EdgeInsets.all(9),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
               onTap: () => context.push('/product/${p.slug}'),
-              child: BottleThumb(product: p, width: 66, height: 82, radius: 14),
+              child: BottleThumb(product: p, width: 62, height: 77, radius: 13),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: SizedBox(
-                height: 82,
+                height: 77,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -257,10 +264,9 @@ class _DiscountCodeState extends State<_DiscountCode> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionLabel('Discount code'),
         if (coupon != null)
           Container(
-            padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
+            padding: const EdgeInsets.fromLTRB(12, 6, 2, 6),
             decoration: BoxDecoration(
               color: const Color(0xffe6ece3),
               borderRadius: BorderRadius.circular(14),
@@ -275,10 +281,10 @@ class _DiscountCodeState extends State<_DiscountCode> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        coupon.code,
-                        style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage, letterSpacing: 0.8),
+                        '${coupon.code} applied',
+                        style: AppText.sans(13.5, weight: FontWeight.w800, color: BrandColors.sage, letterSpacing: 0.4),
                       ),
-                      Text(coupon.description, style: AppText.sans(12, color: BrandColors.inkSoft)),
+                      Text(coupon.description, style: AppText.sans(11.5, color: BrandColors.inkSoft)),
                     ],
                   ),
                 ),
@@ -324,22 +330,35 @@ class _DiscountCodeState extends State<_DiscountCode> {
               ),
             ],
           ),
-        const SizedBox(height: 8),
         if (_error != null && coupon == null)
-          Text(
-            _error!,
-            style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600),
-          )
+          _Hint(_error!, error: true)
         else if (cart.couponBelowMinimum)
-          Text(
-            'Add ${formatPrice(coupon!.minSubtotal - cart.subtotal)} more to use this code.',
-            style: AppText.sans(12, color: BrandColors.sale, weight: FontWeight.w600),
-          )
+          _Hint('Add ${formatPrice(coupon!.minSubtotal - cart.subtotal)} more to use this code.', error: true)
         else if (coupon == null)
-          Text('Try WELCOME10 for 10% off orders over Rs. 2,000.', style: AppText.sans(12, color: BrandColors.muted)),
+          const _Hint('Try WELCOME10 for 10% off orders over Rs. 2,000.'),
       ],
     );
   }
+}
+
+class _Hint extends StatelessWidget {
+  const _Hint(this.text, {this.error = false});
+
+  final String text;
+  final bool error;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 8, left: 4),
+    child: Text(
+      text,
+      style: AppText.sans(
+        12,
+        color: error ? BrandColors.sale : BrandColors.muted,
+        weight: error ? FontWeight.w600 : FontWeight.w500,
+      ),
+    ),
+  );
 }
 
 class _PointsCard extends StatelessWidget {
@@ -354,7 +373,7 @@ class _PointsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 10, 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

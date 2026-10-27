@@ -1,0 +1,10 @@
+[
+  { "name": "home", "route": "/?shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "product-detail", "route": "/product/noir-oud-royale?shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "shop-and-filters", "route": "/shop?filters=1&shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "scent-quiz", "route": "/quiz?step=3&shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "quiz-results", "route": "/quiz/results?demo=1&shot=1", "statusBar": "light", "wait": 3000 },
+  { "name": "bag", "route": "/bag?shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "wishlist", "route": "/wishlist?shot=1", "statusBar": "dark", "wait": 3000 },
+  { "name": "account-and-points", "route": "/account?shot=1", "statusBar": "dark", "wait": 3000 }
+]

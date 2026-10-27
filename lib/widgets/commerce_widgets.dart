@@ -9,15 +9,13 @@ import '../theme.dart';
 import 'bottle_art.dart';
 import 'common.dart';
 
-/// "You're Rs. 710 away from free delivery" with a gold progress bar.
-class FreeShippingMeter extends StatelessWidget {
-  const FreeShippingMeter({super.key, required this.subtotal, this.freeShipCoupon = false, this.compact = false});
+/// Free-delivery progress shown under the Shipping row: a slim bar plus
+/// "Rs. 710 away from free delivery" or "Free delivery unlocked".
+class ShippingMeterLine extends StatelessWidget {
+  const ShippingMeterLine({super.key, required this.subtotal, this.freeShipCoupon = false});
 
   final int subtotal;
   final bool freeShipCoupon;
-
-  /// Hides the scale labels under the bar.
-  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -25,85 +23,31 @@ class FreeShippingMeter extends StatelessWidget {
     final remaining = (threshold - subtotal).clamp(0, threshold);
     final unlocked = remaining == 0 || freeShipCoupon;
     final pct = unlocked ? 1.0 : (subtotal / threshold).clamp(0.0, 1.0);
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, compact ? 12 : 14, 16, compact ? 13 : 14),
-      decoration: BoxDecoration(color: BrandColors.paper2, borderRadius: BorderRadius.circular(18)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final color = unlocked ? BrandColors.sage : BrandColors.gold;
+    return Padding(
+      padding: const EdgeInsets.only(top: 2, bottom: 6),
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(
-                unlocked ? Icons.check_circle_rounded : Icons.local_shipping_outlined,
-                size: 19,
-                color: unlocked ? BrandColors.sage : BrandColors.gold,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text.rich(
-                  unlocked
-                      ? TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Free delivery',
-                              style: AppText.sans(13, weight: FontWeight.w800),
-                            ),
-                            TextSpan(
-                              text: freeShipCoupon && remaining > 0 ? ' with your code' : ' unlocked — nice!',
-                              style: AppText.sans(13, color: BrandColors.inkSoft),
-                            ),
-                          ],
-                        )
-                      : TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "You're ",
-                              style: AppText.sans(13, color: BrandColors.inkSoft),
-                            ),
-                            TextSpan(
-                              text: formatPrice(remaining),
-                              style: AppText.sans(13, weight: FontWeight.w800),
-                            ),
-                            TextSpan(
-                              text: ' away from free delivery',
-                              style: AppText.sans(13, color: BrandColors.inkSoft),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-            ],
+          Icon(unlocked ? Icons.check_circle_rounded : Icons.local_shipping_outlined, size: 15, color: color),
+          const SizedBox(width: 7),
+          Text(
+            unlocked
+                ? (freeShipCoupon && remaining > 0 ? 'Free with your code' : 'Free delivery unlocked')
+                : '${formatPrice(remaining)} away from free delivery',
+            style: AppText.sans(11.5, weight: FontWeight.w700, color: color),
           ),
-          const SizedBox(height: 10),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(9),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(end: pct),
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeOutCubic,
-              builder: (context, v, _) => LinearProgressIndicator(
-                value: v,
-                minHeight: 6,
-                color: unlocked ? BrandColors.sage : BrandColors.gold,
+          const SizedBox(width: 10),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(9),
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(end: pct),
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOutCubic,
+                builder: (context, v, _) => LinearProgressIndicator(value: v, minHeight: 5, color: color),
               ),
             ),
           ),
-          if (!compact) ...[
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Text(
-                  formatPrice(subtotal.clamp(0, threshold)),
-                  style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600),
-                ),
-                const Spacer(),
-                Text(
-                  'Free over ${formatPrice(threshold)}',
-                  style: AppText.sans(10.5, color: BrandColors.muted, weight: FontWeight.w600),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );
@@ -213,6 +157,7 @@ class TotalsBreakdown extends StatelessWidget {
     this.couponCode,
     this.savings = 0,
     this.pointsNote,
+    this.afterShipping,
   });
 
   final int subtotal;
@@ -223,6 +168,9 @@ class TotalsBreakdown extends StatelessWidget {
   final String? couponCode;
   final int savings;
   final String? pointsNote;
+
+  /// Shown right under the Shipping row (e.g. the free-delivery meter).
+  final Widget? afterShipping;
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +187,7 @@ class TotalsBreakdown extends StatelessWidget {
           ),
         if (points > 0) AmountRow('Points redeemed', '− ${formatPrice(points)}', accent: BrandColors.sage),
         AmountRow('Shipping', shipping == 0 ? 'Free' : formatPrice(shipping)),
+        ?afterShipping,
         const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,

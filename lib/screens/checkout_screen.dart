@@ -195,6 +195,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         total: totals.total,
                         couponCode: cart.coupon?.code,
                         pointsNote: "You'll earn ${cart.pointsToEarn} points on delivery",
+                        afterShipping: cart.shippingMethod == ShippingMethod.standard
+                            ? ShippingMeterLine(
+                                subtotal: cart.subtotal,
+                                freeShipCoupon: cart.coupon?.type == CouponType.freeShip,
+                              )
+                            : null,
                       ),
                     ],
                   ),
