@@ -30,11 +30,13 @@ class EditorialText extends StatelessWidget {
     this.accent = BrandColors.gold,
     this.textAlign = TextAlign.start,
     this.height = 1.1,
+    this.accentWeight,
   });
 
   final String text;
   final double size;
   final FontWeight weight;
+  final FontWeight? accentWeight;
   final Color color;
   final Color accent;
   final TextAlign textAlign;
@@ -50,7 +52,7 @@ class EditorialText extends StatelessWidget {
             TextSpan(
               text: parts[i],
               style: i.isOdd
-                  ? AppText.display(size, weight: weight, italic: true, color: accent, height: height)
+                  ? AppText.display(size, weight: accentWeight ?? weight, italic: true, color: accent, height: height)
                   : AppText.display(size, weight: weight, color: color, height: height),
             ),
         ],

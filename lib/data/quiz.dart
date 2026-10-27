@@ -146,11 +146,14 @@ class QuizMatch {
   final int percent;
 }
 
-/// Ranks perfumes (no home, sets or mists) the way the quiz page does, top [take].
+/// The quiz only ranks wearable perfumes and attars — no home, sets or mists.
+Iterable<Product> get quizCandidates =>
+    kProducts.where((p) => !const ['HOME', 'SET', 'MIST'].contains(p.concentration));
+
+/// Ranks candidates the way the quiz page does (score, then rating), top [take].
 List<QuizMatch> rankMatches(QuizAnswers a, {int take = 4}) {
   final best = maxScore(a);
-  final ranked = kProducts
-      .where((p) => !const ['HOME', 'SET', 'MIST'].contains(p.concentration))
+  final ranked = quizCandidates
       .map((p) => (p, scoreProduct(p, a)))
       .toList()
     ..sort((x, y) {

@@ -25,7 +25,7 @@ final _rootKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 ///  /                       Home
 ///  /shop                   The Library — `?filters=1` opens the filter sheet
 ///                          with demo filters; `?family=oud&gender=MEN…` pre-filters
-///  /collections/:slug      A category or virtual collection
+///  /shop/collections/:slug A category or virtual collection (back → the Library)
 ///  /search?q=              Search over the catalogue
 ///  /product/:slug          Product detail
 ///  /quiz                   Scent quiz — `?step=3` for a mid-quiz state
@@ -53,14 +53,16 @@ GoRouter buildRouter(AppState state, {String? initialLocation}) {
               GoRoute(
                 path: '/shop',
                 builder: (context, s) => ShopScreen(key: ValueKey(s.uri.toString()), query: s.uri.queryParameters),
-              ),
-              GoRoute(
-                path: '/collections/:slug',
-                builder: (context, s) => ShopScreen(
-                  key: ValueKey(s.uri.toString()),
-                  query: s.uri.queryParameters,
-                  collectionSlug: s.pathParameters['slug'],
-                ),
+                routes: [
+                  GoRoute(
+                    path: 'collections/:slug',
+                    builder: (context, s) => ShopScreen(
+                      key: ValueKey(s.uri.toString()),
+                      query: s.uri.queryParameters,
+                      collectionSlug: s.pathParameters['slug'],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
